@@ -158,7 +158,8 @@ export const translations = {
     
     // Home Page
     welcomeToPortal: 'Welcome to South Sudan Immigration Portal',
-    applyOnlineEasily: 'Apply for passports, national IDs, visas, and permits online',
+    applyOnlineEasily: 'Apply for passports and national IDs online - Fast, Secure, and Transparent',
+    searchServices: 'Search for services...',
     ourServices: 'Our Services',
     searchResults: 'Search Results',
     noServicesFound: 'No services found',
@@ -363,7 +364,8 @@ export const translations = {
     
     // Home Page
     welcomeToPortal: 'مرحباً بكم في بوابة الهجرة لجنوب السودان',
-    applyOnlineEasily: 'قدم طلبات جوازات السفر والهويات الوطنية والتأشيرات والتصاريح عبر الإنترنت',
+    applyOnlineEasily: 'قدم طلبات جوازات السفر والهويات الوطنية عبر الإنترنت - سريع وآمن وشفاف',
+    searchServices: 'ابحث عن الخدمات...',
     ourServices: 'خدماتنا',
     searchResults: 'نتائج البحث',
     noServicesFound: 'لم يتم العثور على خدمات',

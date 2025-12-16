@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../lib/api';
 import toast from 'react-hot-toast';
+import { useTranslation } from '../hooks/useTranslation';
 
 export default function MyApplications() {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchApplications();
@@ -58,7 +60,7 @@ export default function MyApplications() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">My Applications</h1>
+      <h1 className="text-3xl font-bold mb-6">{t('myApplicationsTitle')}</h1>
 
       {applications.length === 0 ? (
         <div className="bg-white p-8 rounded-lg shadow text-center">

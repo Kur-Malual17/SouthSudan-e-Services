@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import api from '../lib/api';
 import { useAuthStore } from '../store/authStore';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface RegisterForm {
   firstName: string;
@@ -19,6 +20,7 @@ export default function Register() {
   const { setAuth } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<RegisterForm>();
+  const { t, language } = useTranslation();
 
   const onSubmit = async (data: RegisterForm) => {
     if (data.password !== data.confirmPassword) {
@@ -87,8 +89,8 @@ export default function Register() {
               <path d="M 133,300 L 148,340 L 190,340 L 156,365 L 171,405 L 133,380 L 95,405 L 110,365 L 76,340 L 118,340 Z" fill="#FCDD09"/>
             </svg>
           </div>
-          <h2 className="text-3xl font-bold text-primary">Create Account</h2>
-          <p className="text-gray-600 text-sm mt-1">Join the immigration portal</p>
+          <h2 className="text-3xl font-bold text-primary">{t('createAccountTitle')}</h2>
+          <p className="text-gray-600 text-sm mt-1">{t('joinPortal')}</p>
         </div>
         
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
+import { useTranslation } from '../hooks/useTranslation';
 
 export default function Dashboard() {
   const { user } = useAuthStore();
+  const { t } = useTranslation();
 
   const services = [
     {
@@ -58,8 +60,8 @@ export default function Dashboard() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="mb-8 bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold mb-2">Welcome, {user?.firstName}!</h1>
-        <p className="text-blue-100">Choose a service to get started with your application</p>
+        <h1 className="text-3xl font-bold mb-2">{t('welcomeUser')}, {user?.firstName}!</h1>
+        <p className="text-blue-100">{t('chooseService')}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
@@ -76,16 +78,16 @@ export default function Dashboard() {
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-accent">
-        <h2 className="text-xl font-semibold mb-4 text-primary">Quick Links</h2>
+        <h2 className="text-xl font-semibold mb-4 text-primary">{t('quickLinks')}</h2>
         <div className="space-y-2">
           <Link to="/my-applications" className="block text-primary hover:text-secondary transition">
-            View My Applications
+            {t('viewMyApplications')}
           </Link>
           <Link to="/help" className="block text-primary hover:text-secondary transition">
-            Help & Support
+            {t('helpSupport')}
           </Link>
           <Link to="/contact" className="block text-primary hover:text-secondary transition">
-            Contact Us
+            {t('contactUs')}
           </Link>
         </div>
       </div>

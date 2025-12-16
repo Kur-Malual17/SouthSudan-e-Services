@@ -59,21 +59,21 @@ export default function Home() {
           <div className="absolute top-0 left-0 w-full h-1/3 bg-black"></div>
           <div className="absolute bottom-0 left-0 w-full h-1/3 bg-green-600"></div>
         </div>
-        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+        <div className={`max-w-4xl mx-auto px-4 text-center relative z-10 ${language === 'ar' ? 'rtl' : 'ltr'}`}>
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">
-            Welcome to South Sudan Immigration Portal
+            {t('welcomeToPortal')}
           </h1>
           <p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 text-blue-100 px-4">
-            Apply for passports and national IDs online - Fast, Secure, and Transparent
+            {t('applyOnlineEasily')}
           </p>
           
           {!user && (
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8">
               <Link to="/register" className="w-full sm:w-auto bg-yellow-400 text-gray-900 px-6 sm:px-8 py-2 sm:py-3 rounded-lg font-bold hover:bg-yellow-300 transition shadow-lg text-sm sm:text-base">
-                Get Started
+                {t('getStarted')}
               </Link>
               <Link to="/login" className="w-full sm:w-auto border-2 border-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-900 transition text-sm sm:text-base">
-                Login
+                {t('login')}
               </Link>
             </div>
           )}
@@ -85,7 +85,7 @@ export default function Home() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search for services..."
+                placeholder={t('searchServices')}
                 className="w-full px-5 py-3 pr-12 rounded-lg text-gray-900 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-lg"
               />
               <svg 
@@ -172,11 +172,11 @@ export default function Home() {
         <div className="w-20 sm:w-24 h-1 bg-yellow-400 mx-auto mb-8 sm:mb-12"></div>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {[
-            { step: '1', title: 'Create Account' },
-            { step: '2', title: 'Choose Service' },
-            { step: '3', title: 'Fill Application' },
-            { step: '4', title: 'Make Payment' },
-            { step: '5', title: 'Collect Document' },
+            { step: '1', title: t('createAccount') },
+            { step: '2', title: t('chooseServiceText') },
+            { step: '3', title: t('fillForm') },
+            { step: '4', title: t('makePayment') },
+            { step: '5', title: t('getDocument') },
           ].map((item) => (
             <div key={item.step} className="text-center">
               <div className="bg-gradient-to-br from-blue-600 to-green-600 text-white w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold shadow-lg border-2 border-yellow-400">
