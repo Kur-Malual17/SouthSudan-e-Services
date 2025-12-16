@@ -1,0 +1,500 @@
+from rest_framework import viewsets, status, permissions
+from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.db.models import Count, Q
+from django.utils import timezone
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+from django.utils.decorators import method_decorator
+from .models import Application, UserProfile
+from .serializers import (
+    ApplicationSerializer, ApplicationListSerializer,
+    RegisterSerializer, LoginSerializer, UserSerializer, UserProfileSerializer
+)
+from .utils import generate_pdf, send_approval_email, send_rejection_email, send_application_received_email
+from .payment_service import PaystackService
+from decouple import config
+
+# CSRF Token View
+@api_view(['GET'])
+@permission_classes([AllowAny])
+@ensure_csrf_cookie
+def get_csrf_token(request):
+    """Get CSRF token"""
+    return Response({'success': True})
+
+# Authentication Views
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register_view(request):
+    """Register a new user"""
+    serializer = RegisterSerializer(data=request.data)
+    if serializer.is_valid():
+        try:
+            user = serializer.save()
+            login(request, user)
+            return Response({
+                'success': True,
+                'user': UserSerializer(user).data,
+                'profile': UserProfileSerializer(user.profile).data
+            }, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            error_msg = str(e)
+            if 'duplicate key' in error_msg or 'already exists' in error_msg:
+                return Response({
+                    'error': 'This email is already registered. Please login instead.'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                'error': 'Registration failed. Please try again.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        # Return specific validation errors
+        errors = serializer.errors
+        if 'username' in errors:
+            return Response({'error': errors['username'][0]}, status=status.HTTP_400_BAD_REQUEST)
+        elif 'email' in errors:
+            return Response({'error': errors['email'][0]}, status=status.HTTP_400_BAD_REQUEST)
+        elif 'password' in errors:
+            return Response({'error': errors['password'][0]}, status=status.HTTP_400_BAD_REQUEST)
+        elif 'first_name' in errors:
+            return Response({'error': 'First name is required'}, status=status.HTTP_400_BAD_REQUEST)
+        elif 'last_name' in errors:
+            return Response({'error': 'Last name is required'}, status=status.HTTP_400_BAD_REQUEST)
+        elif 'phone_number' in errors:
+            return Response({'error': 'Phone number is required'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'error': 'Please fill all required fields correctly'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+@ensure_csrf_cookie
+def login_view(request):
+    """Login user"""
+    username_or_email = request.data.get('username')
+    password = request.data.get('password')
+    
+    # Check if fields are provided
+    if not username_or_email:
+        return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
+    if not password:
+        return Response({'error': 'Password is required'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Try to find user by email or username
+    user_obj = None
+    try:
+        # First try to find by email
+        if '@' in username_or_email:
+            user_obj = User.objects.filter(email=username_or_email).first()
+            if user_obj:
+                username = user_obj.username
+            else:
+                # Try using email prefix as username
+                username = username_or_email.split('@')[0]
+        else:
+            username = username_or_email
+            user_obj = User.objects.filter(username=username).first()
+        
+        # Check if user exists
+        if not user_obj and not User.objects.filter(username=username).exists():
+            return Response({
+                'error': 'No account found with this email. Please register first.'
+            }, status=status.HTTP_404_NOT_FOUND)
+    except Exception:
+        username = username_or_email
+    
+    # Try to authenticate
+    user = authenticate(username=username, password=password)
+    
+    if user:
+        if not user.is_active:
+            return Response({
+                'error': 'Your account has been deactivated. Please contact support.'
+            }, status=status.HTTP_403_FORBIDDEN)
+        
+        login(request, user)
+        return Response({
+            'success': True,
+            'user': UserSerializer(user).data,
+            'profile': UserProfileSerializer(user.profile).data
+        })
+    else:
+        # User exists but password is wrong
+        return Response({
+            'error': 'Incorrect password. Please try again.'
+        }, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def logout_view(request):
+    """Logout user"""
+    logout(request)
+    return Response({'success': True, 'message': 'Logged out successfully'})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def current_user_view(request):
+    """Get current user details"""
+    return Response({
+        'success': True,
+        'user': UserSerializer(request.user).data,
+        'profile': UserProfileSerializer(request.user.profile).data
+    })
+
+# Application Views
+class ApplicationViewSet(viewsets.ModelViewSet):
+    """Application CRUD operations"""
+    serializer_class = ApplicationSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        user = self.request.user
+        # Regular users see only their applications
+        if user.profile.role == 'applicant':
+            return Application.objects.filter(user=user)
+        # Admin/Officer/Supervisor see all
+        return Application.objects.all()
+    
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ApplicationListSerializer
+        return ApplicationSerializer
+    
+    def handle_exception(self, exc):
+        """Custom exception handler for better error messages"""
+        from rest_framework.exceptions import ValidationError as DRFValidationError
+        
+        if isinstance(exc, DRFValidationError):
+            # Check if it's a payment receipt error
+            error_detail = exc.detail
+            if isinstance(error_detail, dict):
+                if 'payment_proof' in error_detail:
+                    error_msg = error_detail['payment_proof']
+                    if isinstance(error_msg, list):
+                        error_msg = error_msg[0]
+                    return Response({
+                        'error': str(error_msg),
+                        'error_type': 'duplicate_payment_receipt'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+        
+        return super().handle_exception(exc)
+    
+    @action(detail=False, methods=['get'])
+    def my_applications(self, request):
+        """Get current user's applications"""
+        applications = Application.objects.filter(user=request.user)
+        serializer = ApplicationListSerializer(applications, many=True)
+        return Response({'success': True, 'applications': serializer.data})
+    
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def approve(self, request, pk=None):
+        """Approve an application (Admin/Supervisor only)"""
+        if request.user.profile.role not in ['admin', 'supervisor']:
+            return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+        
+        application = self.get_object()
+        
+        if application.payment_status != 'completed':
+            return Response({'error': 'Payment not completed'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Update application
+        application.status = 'approved'
+        application.reviewed_by = request.user
+        application.reviewed_at = timezone.now()
+        
+        # Generate PDF
+        pdf_path = generate_pdf(application)
+        application.approved_pdf = pdf_path
+        application.save()
+        
+        # Send email
+        send_approval_email(application)
+        
+        return Response({
+            'success': True,
+            'message': 'Application approved and email sent',
+            'application': ApplicationSerializer(application).data
+        })
+    
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def reject(self, request, pk=None):
+        """Reject an application (Admin/Supervisor only)"""
+        if request.user.profile.role not in ['admin', 'supervisor']:
+            return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+        
+        application = self.get_object()
+        reason = request.data.get('reason', '')
+        
+        application.status = 'rejected'
+        application.rejection_reason = reason
+        application.reviewed_by = request.user
+        application.reviewed_at = timezone.now()
+        application.save()
+        
+        # Send rejection email
+        try:
+            send_rejection_email(application)
+        except Exception as email_error:
+            print(f"Failed to send rejection email: {email_error}")
+        
+        return Response({
+            'success': True,
+            'message': 'Application rejected and email sent',
+            'application': ApplicationSerializer(application).data
+        })
+    
+    @action(detail=True, methods=['patch'], permission_classes=[IsAuthenticated])
+    def update_status(self, request, pk=None):
+        """Update application status (Admin/Officer/Supervisor)"""
+        if request.user.profile.role not in ['admin', 'officer', 'supervisor']:
+            return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+        
+        application = self.get_object()
+        new_status = request.data.get('status')
+        
+        if new_status in dict(Application.STATUS_CHOICES):
+            application.status = new_status
+            application.reviewed_by = request.user
+            application.reviewed_at = timezone.now()
+            application.save()
+            
+            return Response({
+                'success': True,
+                'application': ApplicationSerializer(application).data
+            })
+        
+        return Response({'error': 'Invalid status'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def verify_payment(self, request, pk=None):
+        """Verify payment (Admin/Supervisor only)"""
+        if request.user.profile.role not in ['admin', 'supervisor']:
+            return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+        
+        application = self.get_object()
+        
+        if not application.payment_proof:
+            return Response({'error': 'No payment proof submitted'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Update payment status
+        application.payment_status = 'completed'
+        application.payment_verified_by = request.user
+        application.payment_verified_at = timezone.now()
+        application.payment_date = timezone.now()
+        application.save()
+        
+        return Response({
+            'success': True,
+            'message': 'Payment verified successfully',
+            'application': ApplicationSerializer(application).data
+        })
+    
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def reject_payment(self, request, pk=None):
+        """Reject payment (Admin/Supervisor only)"""
+        if request.user.profile.role not in ['admin', 'supervisor']:
+            return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+        
+        application = self.get_object()
+        reason = request.data.get('reason', '')
+        
+        # Update payment status
+        application.payment_status = 'failed'
+        application.payment_rejection_reason = reason
+        application.payment_verified_by = request.user
+        application.payment_verified_at = timezone.now()
+        application.save()
+        
+        return Response({
+            'success': True,
+            'message': 'Payment rejected',
+            'application': ApplicationSerializer(application).data
+        })
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def submit_application(request):
+    """Submit a new application"""
+    try:
+        # Use the serializer to handle validation and creation
+        serializer = ApplicationSerializer(data=request.data, context={'request': request})
+        
+        if serializer.is_valid():
+            application = serializer.save()
+            
+            # Send application received email
+            try:
+                send_application_received_email(application)
+            except Exception as email_error:
+                print(f"Failed to send email: {email_error}")
+                # Don't fail the application submission if email fails
+            
+            return Response({
+                'success': True,
+                'message': 'Application submitted successfully',
+                'application': ApplicationSerializer(application).data
+            }, status=status.HTTP_201_CREATED)
+        else:
+            # Return validation errors
+            return Response({
+                'error': 'Validation failed',
+                'details': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+    except Exception as e:
+        return Response({
+            'error': f'Failed to submit application: {str(e)}'
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def statistics_view(request):
+    """Get application statistics (Admin only)"""
+    if request.user.profile.role not in ['admin', 'officer', 'supervisor']:
+        return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+    
+    total = Application.objects.count()
+    by_status = Application.objects.values('status').annotate(count=Count('id'))
+    by_type = Application.objects.values('application_type').annotate(count=Count('id'))
+    
+    stats = {
+        'total': total,
+        'by_status': {item['status']: item['count'] for item in by_status},
+        'by_type': {item['application_type']: item['count'] for item in by_type}
+    }
+    
+    return Response({'success': True, 'statistics': stats})
+
+# Payment Views
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def initialize_payment(request):
+    """Initialize Paystack payment for an application"""
+    try:
+        application_id = request.data.get('application_id')
+        
+        if not application_id:
+            return Response({
+                'error': 'Application ID is required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Get the application
+        try:
+            application = Application.objects.get(id=application_id, user=request.user)
+        except Application.DoesNotExist:
+            return Response({
+                'error': 'Application not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        # Check if payment is already completed
+        if application.payment_status == 'completed':
+            return Response({
+                'error': 'Payment already completed for this application'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Determine payment amount based on application type
+        amount_map = {
+            'passport-first': 50000,  # 500 SSP or NGN
+            'passport-replacement': 30000,  # 300 SSP or NGN
+            'nationalid-first': 20000,  # 200 SSP or NGN
+            'nationalid-replacement': 15000,  # 150 SSP or NGN
+        }
+        
+        amount = amount_map.get(application.application_type, 50000)
+        
+        # Generate unique reference
+        reference = f"PAY-{application.confirmation_number}-{int(timezone.now().timestamp())}"
+        
+        # Initialize payment with Paystack
+        paystack = PaystackService()
+        callback_url = request.data.get('callback_url', 'http://localhost:5173/payment/verify')
+        
+        result = paystack.initialize_transaction(
+            email=application.email,
+            amount=amount,
+            reference=reference,
+            callback_url=callback_url
+        )
+        
+        if result.get('status'):
+            # Update application with payment reference
+            application.payment_reference = reference
+            application.payment_amount = amount / 100  # Convert from kobo
+            application.payment_method = 'credit_card'
+            application.save()
+            
+            return Response({
+                'success': True,
+                'authorization_url': result['data']['authorization_url'],
+                'access_code': result['data']['access_code'],
+                'reference': reference
+            })
+        else:
+            return Response({
+                'error': result.get('message', 'Payment initialization failed')
+            }, status=status.HTTP_400_BAD_REQUEST)
+    
+    except Exception as e:
+        return Response({
+            'error': f'Payment initialization failed: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def verify_payment(request):
+    """Verify Paystack payment"""
+    try:
+        reference = request.query_params.get('reference')
+        
+        if not reference:
+            return Response({
+                'error': 'Payment reference is required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Verify payment with Paystack
+        paystack = PaystackService()
+        result = paystack.verify_transaction(reference)
+        
+        if result.get('status') and result.get('data', {}).get('status') == 'success':
+            # Find the application
+            try:
+                application = Application.objects.get(payment_reference=reference)
+            except Application.DoesNotExist:
+                return Response({
+                    'error': 'Application not found for this payment'
+                }, status=status.HTTP_404_NOT_FOUND)
+            
+            # Update application payment status
+            application.payment_status = 'completed'
+            application.payment_date = timezone.now()
+            application.payment_verified_at = timezone.now()
+            application.save()
+            
+            return Response({
+                'success': True,
+                'message': 'Payment verified successfully',
+                'application': ApplicationSerializer(application).data
+            })
+        else:
+            return Response({
+                'success': False,
+                'message': 'Payment verification failed',
+                'details': result.get('message', 'Unknown error')
+            }, status=status.HTTP_400_BAD_REQUEST)
+    
+    except Exception as e:
+        return Response({
+            'error': f'Payment verification failed: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_paystack_public_key(request):
+    """Get Paystack public key for frontend"""
+    return Response({
+        'public_key': config('PAYSTACK_PUBLIC_KEY', default='')
+    })

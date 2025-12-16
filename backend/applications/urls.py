@@ -1,0 +1,31 @@
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from . import views
+
+router = DefaultRouter()
+router.register(r'applications', views.ApplicationViewSet, basename='application')
+
+urlpatterns = [
+    # CSRF Token
+    path('csrf/', views.get_csrf_token, name='csrf-token'),
+    
+    # Authentication
+    path('auth/register/', views.register_view, name='register'),
+    path('auth/login/', views.login_view, name='login'),
+    path('auth/logout/', views.logout_view, name='logout'),
+    path('auth/me/', views.current_user_view, name='current-user'),
+    
+    # Applications
+    path('applications/submit/', views.submit_application, name='submit-application'),
+    
+    # Payment
+    path('payment/initialize/', views.initialize_payment, name='initialize-payment'),
+    path('payment/verify/', views.verify_payment, name='verify-payment'),
+    path('payment/public-key/', views.get_paystack_public_key, name='paystack-public-key'),
+    
+    # Statistics
+    path('admin/statistics/', views.statistics_view, name='statistics'),
+    
+    # Applications (includes all CRUD + custom actions)
+    path('', include(router.urls)),
+]

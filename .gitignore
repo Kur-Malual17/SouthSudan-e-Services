@@ -1,0 +1,73 @@
+####################################
+# GENERAL
+####################################
+.DS_Store
+Thumbs.db
+
+####################################
+# ENV FILES
+####################################
+.env
+.env.*
+!.env.example
+
+####################################
+# PYTHON / DJANGO
+####################################
+# Virtual environments
+venv/
+.env/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Django files
+db.sqlite3
+media/
+staticfiles/
+
+# Django logs
+*.log
+
+####################################
+# NODE / REACT / TYPESCRIPT
+####################################
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# React / Vite / Next cache
+.vite/
+.next/
+.cache/
+
+####################################
+# FRONTEND TOOLING
+####################################
+# ESLint / Prettier
+.eslintcache
+
+####################################
+# IDE / EDITORS
+####################################
+.vscode/
+.idea/
+
+####################################
+# TESTING / COVERAGE
+####################################
+coverage/
+htmlcov/
+
+####################################
+# MISC
+####################################
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

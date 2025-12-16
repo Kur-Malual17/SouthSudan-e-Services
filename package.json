@@ -1,0 +1,34 @@
+{
+  "name": "south-sudan-immigration-portal",
+  "version": "1.0.0",
+  "description": "South Sudan Immigration Online Application System",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "build": "cd client && npm run build && cd ../server && npm run build"
+  },
+  "keywords": [
+    "immigration",
+    "passport",
+    "national-id",
+    "government"
+  ],
+  "author": "South Sudan Government",
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kur-Malual17/SouthSudan-e-Services.git"
+  },
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Kur-Malual17/SouthSudan-e-Services/issues"
+  },
+  "homepage": "https://github.com/Kur-Malual17/SouthSudan-e-Services#readme",
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

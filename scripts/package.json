@@ -1,0 +1,9 @@
+{
+  "name": "immigration-scripts",
+  "version": "1.0.0",
+  "description": "Utility scripts for South Sudan Immigration Portal",
+  "dependencies": {
+    "mongoose": "^8.0.0",
+    "bcryptjs": "^2.4.3"
+  }
+}
