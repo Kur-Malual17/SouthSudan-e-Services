@@ -18,7 +18,7 @@ function getCookie(name: string) {
 }
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
+  baseURL: import.meta.env.VITE_API_URL || 'https://southsudan-e-services.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
