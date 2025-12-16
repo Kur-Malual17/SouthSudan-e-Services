@@ -574,7 +574,7 @@ export default function ApplicationDetail() {
               alt="Document" 
               className="max-w-full max-h-[90vh] object-contain rounded bg-white"
               onClick={(e) => e.stopPropagation()}
-              onError={(e) => {
+              onError={() => {
                 console.error('Image failed to load:', viewingImage);
                 toast.error('Failed to load image. Opening in new tab...');
                 window.open(viewingImage, '_blank');

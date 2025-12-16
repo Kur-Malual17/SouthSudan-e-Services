@@ -7,7 +7,6 @@ import toast from 'react-hot-toast';
 export default function VisaApplication() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [hasDependents, setHasDependents] = useState(false);
   const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data: any) => {

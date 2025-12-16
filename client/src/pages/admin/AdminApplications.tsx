@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 export default function AdminApplications() {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [filters, setFilters] = useState({
     status: searchParams.get('status') || '',
     applicationType: searchParams.get('applicationType') || '',

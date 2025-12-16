@@ -15,7 +15,7 @@ export default function Contact() {
   const [loading, setLoading] = useState(false);
   const { register, handleSubmit, reset, formState: { errors } } = useForm<ContactForm>();
 
-  const onSubmit = async (data: ContactForm) => {
+  const onSubmit = async (_data: ContactForm) => {
     setLoading(true);
     try {
       // Simulate sending message

@@ -8,7 +8,7 @@ export default function PassportFirstTime() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const { register, handleSubmit, watch } = useForm();
 
   const applicantType = watch('applicantType');
   const age = applicantType === 'above18' ? 26 : 15;
