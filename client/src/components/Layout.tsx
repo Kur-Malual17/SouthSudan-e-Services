@@ -9,17 +9,17 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Top Announcement Bar - Irembo Style */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-yellow-400 text-gray-900 py-2 px-4 text-center text-sm font-medium shadow-sm">
-        <span className="inline-flex items-center">
-          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+      <div className="fixed top-0 left-0 right-0 z-50 bg-yellow-400 text-gray-900 py-3 px-4 text-center text-xs sm:text-sm font-medium shadow-sm">
+        <span className="flex items-center justify-center">
+          <svg className="w-4 h-4 mr-2 flex-shrink-0 hidden sm:block" fill="currentColor" viewBox="0 0 20 20">
             <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
           </svg>
-          Welcome to South Sudan Immigration Online Portal - Apply for passports and national IDs online
+          <span className="leading-tight">Welcome to South Sudan Immigration Portal - Apply online</span>
         </span>
       </div>
 
       {/* Main Navigation Bar - Irembo Style */}
-      <nav className="fixed top-10 left-0 right-0 z-40 bg-blue-600 text-white shadow-lg">
+      <nav className="fixed top-[52px] left-0 right-0 z-40 bg-blue-600 text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo - Irembo Style */}
@@ -157,8 +157,8 @@ export default function Layout() {
         </div>
       </nav>
       
-      {/* Add padding to prevent content from going under fixed navbar (announcement bar 40px + nav 64px = 104px) */}
-      <div className="h-[104px]"></div>
+      {/* Add padding to prevent content from going under fixed navbar (announcement bar 52px + nav 64px = 116px) */}
+      <div className="h-[116px]"></div>
       
       <main>
         <Outlet />
