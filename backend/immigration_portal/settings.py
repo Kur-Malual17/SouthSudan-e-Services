@@ -90,6 +90,9 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:3000',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
+    'https://south-sudan-e-services.vercel.app',
+    'https://south-sudan-e-services-git-main-kur-malual17s-projects.vercel.app',
+    'https://south-sudan-e-services-h7dmlnr44-kur-malual17s-projects.vercel.app',
     'https://south-sudan-e-services-8546902ip-kur-malual17s-projects.vercel.app',
 ]
 CORS_ALLOW_CREDENTIALS = True
@@ -112,7 +115,11 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:3000',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
+    'https://south-sudan-e-services.vercel.app',
+    'https://south-sudan-e-services-git-main-kur-malual17s-projects.vercel.app',
+    'https://south-sudan-e-services-h7dmlnr44-kur-malual17s-projects.vercel.app',
     'https://south-sudan-e-services-8546902ip-kur-malual17s-projects.vercel.app',
+    'https://southsudan-e-services.onrender.com',
 ]
 CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SAMESITE = 'None'
