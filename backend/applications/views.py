@@ -152,6 +152,9 @@ def password_reset_request(request):
     from django.contrib.auth.tokens import default_token_generator
     from django.utils.http import urlsafe_base64_encode
     from django.utils.encoding import force_bytes
+    import logging
+    
+    logger = logging.getLogger(__name__)
     
     email = request.data.get('email')
     if not email:
@@ -160,6 +163,7 @@ def password_reset_request(request):
     try:
         user = User.objects.get(email=email)
     except User.DoesNotExist:
+        logger.warning(f"Password reset requested for non-existent email: {email}")
         # For security, don't reveal if email exists or not
         return Response({'success': True, 'message': 'If an account exists with this email, you will receive password reset instructions.'})
     
@@ -173,7 +177,10 @@ def password_reset_request(request):
     
     # Send email
     try:
-        send_mail(
+        logger.info(f"Attempting to send password reset email to: {email}")
+        logger.info(f"Using EMAIL_HOST_USER: {config('EMAIL_HOST_USER', default='not-set')}")
+        
+        result = send_mail(
             subject='Password Reset Request - South Sudan Immigration Portal',
             message=f'''
 Hello {user.first_name},
@@ -194,9 +201,17 @@ South Sudan Immigration Portal Team
             recipient_list=[email],
             fail_silently=False,
         )
+        
+        logger.info(f"Email send result: {result}")
+        
+        if result == 0:
+            logger.error("Email failed to send (result = 0)")
+            return Response({'error': 'Failed to send email. Please contact support.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
     except Exception as e:
-        print(f"Error sending password reset email: {e}")
-        # Still return success for security
+        logger.error(f"Error sending password reset email to {email}: {str(e)}")
+        logger.exception(e)
+        return Response({'error': f'Failed to send email: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     return Response({'success': True, 'message': 'Password reset instructions have been sent to your email.'})
 

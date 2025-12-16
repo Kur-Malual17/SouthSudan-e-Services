@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
+import { useTranslation } from '../hooks/useTranslation';
 
 export default function Home() {
   const { user } = useAuthStore();
   const [searchQuery, setSearchQuery] = useState('');
+  const { t, language } = useTranslation();
 
   const services = [
     {
@@ -102,7 +104,7 @@ export default function Home() {
       {/* Services Section with Search Filter */}
       <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12 md:py-16">
         <h2 className="text-2xl sm:text-3xl font-bold text-center mb-2 text-blue-900">
-          {searchQuery ? 'Search Results' : 'Our Services'}
+          {searchQuery ? t('searchResults') : t('ourServices')}
         </h2>
         <div className="w-20 sm:w-24 h-1 bg-yellow-400 mx-auto mb-8 sm:mb-12"></div>
         
@@ -145,20 +147,20 @@ export default function Home() {
       {/* Benefits Section - Responsive */}
       <div className="bg-gradient-to-br from-blue-50 to-green-50 py-8 sm:py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-2 text-blue-900">Why Use Our Portal?</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-2 text-blue-900">{t('whyUsePortal')}</h2>
           <div className="w-20 sm:w-24 h-1 bg-yellow-400 mx-auto mb-8 sm:mb-12"></div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-600">
-              <h3 className="text-xl font-semibold mb-2 text-blue-900">Fast Processing</h3>
-              <p className="text-gray-600">Submit applications online and track status in real-time</p>
+              <h3 className="text-xl font-semibold mb-2 text-blue-900">{t('fastProcessing')}</h3>
+              <p className="text-gray-600">{t('fastProcessingDesc')}</p>
             </div>
             <div className="text-center bg-white p-6 rounded-lg shadow-md border-t-4 border-green-600">
-              <h3 className="text-xl font-semibold mb-2 text-green-700">Secure & Transparent</h3>
-              <p className="text-gray-600">Your data is protected with bank-level security</p>
+              <h3 className="text-xl font-semibold mb-2 text-green-700">{t('secureTransparent')}</h3>
+              <p className="text-gray-600">{t('secureTransparentDesc')}</p>
             </div>
             <div className="text-center bg-white p-6 rounded-lg shadow-md border-t-4 border-yellow-400">
-              <h3 className="text-xl font-semibold mb-2 text-blue-900">Apply Anywhere</h3>
-              <p className="text-gray-600">No need to visit offices - apply from anywhere</p>
+              <h3 className="text-xl font-semibold mb-2 text-blue-900">{t('applyAnywhere')}</h3>
+              <p className="text-gray-600">{t('applyAnywhereDesc')}</p>
             </div>
           </div>
         </div>
@@ -166,7 +168,7 @@ export default function Home() {
 
       {/* How It Works - Responsive */}
       <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12 md:py-16">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center mb-2 text-blue-900">How It Works</h2>
+        <h2 className="text-2xl sm:text-3xl font-bold text-center mb-2 text-blue-900">{t('howItWorks')}</h2>
         <div className="w-20 sm:w-24 h-1 bg-yellow-400 mx-auto mb-8 sm:mb-12"></div>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {[

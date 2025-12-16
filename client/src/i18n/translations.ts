@@ -123,6 +123,20 @@ export const translations = {
     location: 'Location',
     copyright: 'Republic of South Sudan - Directorate of Immigration',
     
+    // Application Status
+    pending: 'Pending',
+    approved: 'Approved',
+    rejected: 'Rejected',
+    inProgress: 'In Progress',
+    
+    // Application Details
+    applicationDetails: 'Application Details',
+    applicantInformation: 'Applicant Information',
+    personalInfo: 'Personal Information',
+    documents: 'Documents',
+    status: 'Status',
+    submittedOn: 'Submitted On',
+    
     // Common
     user: 'User',
     loading: 'Loading...',
@@ -137,6 +151,58 @@ export const translations = {
     no: 'No',
     required: 'Required',
     optional: 'Optional',
+    getStarted: 'Get Started',
+    learnMore: 'Learn More',
+    readMore: 'Read More',
+    viewAll: 'View All',
+    
+    // Home Page
+    welcomeToPortal: 'Welcome to South Sudan Immigration Portal',
+    applyOnlineEasily: 'Apply for passports, national IDs, visas, and permits online',
+    ourServices: 'Our Services',
+    searchResults: 'Search Results',
+    noServicesFound: 'No services found',
+    trySearching: 'Try searching for "passport" or "national ID"',
+    clearSearch: 'Clear Search',
+    whyUsePortal: 'Why Use Our Portal?',
+    fastProcessing: 'Fast Processing',
+    fastProcessingDesc: 'Submit applications online and track status in real-time',
+    secureTransparent: 'Secure & Transparent',
+    secureTransparentDesc: 'Your data is protected with bank-level security',
+    applyAnywhere: 'Apply Anywhere',
+    applyAnywhereDesc: 'No need to visit offices - apply from anywhere',
+    howItWorks: 'How It Works',
+    createAccount: 'Create Account',
+    chooseServiceText: 'Choose Service',
+    fillForm: 'Fill Form',
+    makePayment: 'Make Payment',
+    getDocument: 'Get Document',
+    
+    // My Applications
+    myApplicationsTitle: 'My Applications',
+    noApplicationsYet: 'No applications yet',
+    startFirstApplication: 'Start your first application',
+    confirmationNumber: 'Confirmation',
+    submittedDate: 'Submitted',
+    viewDetails: 'View Details',
+    makePaymentBtn: 'Make Payment',
+    
+    // Payment
+    makePaymentTitle: 'Make Payment',
+    choosePaymentMethod: 'Choose your preferred payment method to complete your application',
+    applicationDetailsTitle: 'Application Details',
+    paymentMethods: 'Payment Methods',
+    mobileMoney: 'Mobile Money',
+    mobileMoneyDesc: 'MTN / Airtel Money',
+    cardPayment: 'Card Payment',
+    cardPaymentDesc: 'Visa, Mastercard, Verve',
+    bankTransfer: 'Bank Transfer',
+    bankTransferDesc: 'Direct bank deposit',
+    securePayment: 'Secure Payment',
+    
+    // Register
+    createAccountTitle: 'Create Account',
+    joinPortal: 'Join the immigration portal',
   },
   ar: {
     // Navigation
@@ -262,6 +328,20 @@ export const translations = {
     location: 'الموقع',
     copyright: 'جمهورية جنوب السودان - مديرية الهجرة',
     
+    // Application Status
+    pending: 'قيد الانتظار',
+    approved: 'موافق عليه',
+    rejected: 'مرفوض',
+    inProgress: 'قيد المعالجة',
+    
+    // Application Details
+    applicationDetails: 'تفاصيل الطلب',
+    applicantInformation: 'معلومات مقدم الطلب',
+    personalInfo: 'المعلومات الشخصية',
+    documents: 'المستندات',
+    status: 'الحالة',
+    submittedOn: 'تم التقديم في',
+    
     // Common
     user: 'المستخدم',
     loading: 'جاري التحميل...',
@@ -276,6 +356,58 @@ export const translations = {
     no: 'لا',
     required: 'مطلوب',
     optional: 'اختياري',
+    getStarted: 'ابدأ الآن',
+    learnMore: 'اعرف المزيد',
+    readMore: 'اقرأ المزيد',
+    viewAll: 'عرض الكل',
+    
+    // Home Page
+    welcomeToPortal: 'مرحباً بكم في بوابة الهجرة لجنوب السودان',
+    applyOnlineEasily: 'قدم طلبات جوازات السفر والهويات الوطنية والتأشيرات والتصاريح عبر الإنترنت',
+    ourServices: 'خدماتنا',
+    searchResults: 'نتائج البحث',
+    noServicesFound: 'لم يتم العثور على خدمات',
+    trySearching: 'جرب البحث عن "جواز سفر" أو "هوية وطنية"',
+    clearSearch: 'مسح البحث',
+    whyUsePortal: 'لماذا تستخدم بوابتنا؟',
+    fastProcessing: 'معالجة سريعة',
+    fastProcessingDesc: 'قدم الطلبات عبر الإنترنت وتتبع الحالة في الوقت الفعلي',
+    secureTransparent: 'آمن وشفاف',
+    secureTransparentDesc: 'بياناتك محمية بأمان على مستوى البنوك',
+    applyAnywhere: 'قدم من أي مكان',
+    applyAnywhereDesc: 'لا حاجة لزيارة المكاتب - قدم من أي مكان',
+    howItWorks: 'كيف يعمل',
+    createAccount: 'إنشاء حساب',
+    chooseServiceText: 'اختر الخدمة',
+    fillForm: 'املأ النموذج',
+    makePayment: 'ادفع',
+    getDocument: 'احصل على الوثيقة',
+    
+    // My Applications
+    myApplicationsTitle: 'طلباتي',
+    noApplicationsYet: 'لا توجد طلبات بعد',
+    startFirstApplication: 'ابدأ طلبك الأول',
+    confirmationNumber: 'رقم التأكيد',
+    submittedDate: 'تاريخ التقديم',
+    viewDetails: 'عرض التفاصيل',
+    makePaymentBtn: 'الدفع',
+    
+    // Payment
+    makePaymentTitle: 'الدفع',
+    choosePaymentMethod: 'اختر طريقة الدفع المفضلة لديك لإكمال طلبك',
+    applicationDetailsTitle: 'تفاصيل الطلب',
+    paymentMethods: 'طرق الدفع',
+    mobileMoney: 'المحفظة الإلكترونية',
+    mobileMoneyDesc: 'MTN / Airtel Money',
+    cardPayment: 'الدفع بالبطاقة',
+    cardPaymentDesc: 'Visa, Mastercard, Verve',
+    bankTransfer: 'التحويل البنكي',
+    bankTransferDesc: 'إيداع بنكي مباشر',
+    securePayment: 'دفع آمن',
+    
+    // Register
+    createAccountTitle: 'إنشاء حساب',
+    joinPortal: 'انضم إلى بوابة الهجرة',
   }
 };
 
