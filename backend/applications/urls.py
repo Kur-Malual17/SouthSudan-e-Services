@@ -14,6 +14,8 @@ urlpatterns = [
     path('auth/login/', views.login_view, name='login'),
     path('auth/logout/', views.logout_view, name='logout'),
     path('auth/me/', views.current_user_view, name='current-user'),
+    path('auth/password-reset/', views.password_reset_request, name='password-reset'),
+    path('auth/password-reset-confirm/', views.password_reset_confirm, name='password-reset-confirm'),
     
     # Applications
     path('applications/submit/', views.submit_application, name='submit-application'),

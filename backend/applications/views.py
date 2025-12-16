@@ -143,6 +143,100 @@ def current_user_view(request):
         'profile': UserProfileSerializer(request.user.profile).data
     })
 
+# Password Reset Views
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def password_reset_request(request):
+    """Request password reset - send email with reset link"""
+    from django.core.mail import send_mail
+    from django.contrib.auth.tokens import default_token_generator
+    from django.utils.http import urlsafe_base64_encode
+    from django.utils.encoding import force_bytes
+    
+    email = request.data.get('email')
+    if not email:
+        return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        # For security, don't reveal if email exists or not
+        return Response({'success': True, 'message': 'If an account exists with this email, you will receive password reset instructions.'})
+    
+    # Generate token
+    token = default_token_generator.make_token(user)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    
+    # Create reset link
+    frontend_url = config('FRONTEND_URL', default='http://localhost:3000')
+    reset_link = f"{frontend_url}/reset-password?token={uid}-{token}"
+    
+    # Send email
+    try:
+        send_mail(
+            subject='Password Reset Request - South Sudan Immigration Portal',
+            message=f'''
+Hello {user.first_name},
+
+You have requested to reset your password for the South Sudan Immigration Portal.
+
+Click the link below to reset your password:
+{reset_link}
+
+This link will expire in 24 hours.
+
+If you did not request this password reset, please ignore this email.
+
+Best regards,
+South Sudan Immigration Portal Team
+            ''',
+            from_email=config('EMAIL_HOST_USER', default='noreply@immigration.gov.ss'),
+            recipient_list=[email],
+            fail_silently=False,
+        )
+    except Exception as e:
+        print(f"Error sending password reset email: {e}")
+        # Still return success for security
+    
+    return Response({'success': True, 'message': 'Password reset instructions have been sent to your email.'})
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def password_reset_confirm(request):
+    """Confirm password reset with token"""
+    from django.contrib.auth.tokens import default_token_generator
+    from django.utils.http import urlsafe_base64_decode
+    from django.utils.encoding import force_str
+    
+    token_string = request.data.get('token')
+    new_password = request.data.get('password')
+    
+    if not token_string or not new_password:
+        return Response({'error': 'Token and password are required'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        # Split the token
+        uid, token = token_string.split('-', 1)
+        
+        # Decode user ID
+        user_id = force_str(urlsafe_base64_decode(uid))
+        user = User.objects.get(pk=user_id)
+        
+        # Verify token
+        if not default_token_generator.check_token(user, token):
+            return Response({'error': 'Invalid or expired reset link'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Set new password
+        user.set_password(new_password)
+        user.save()
+        
+        return Response({'success': True, 'message': 'Password has been reset successfully'})
+        
+    except (ValueError, User.DoesNotExist):
+        return Response({'error': 'Invalid reset link'}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({'error': 'Failed to reset password'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 # Application Views
 class ApplicationViewSet(viewsets.ModelViewSet):
     """Application CRUD operations"""

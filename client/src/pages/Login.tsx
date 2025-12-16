@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import api from '../lib/api';
 import { useAuthStore } from '../store/authStore';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface LoginForm {
   email: string;
@@ -15,6 +16,7 @@ export default function Login() {
   const { setAuth } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>();
+  const { t, language } = useTranslation();
 
   const onSubmit = async (data: LoginForm) => {
     setLoading(true);
@@ -50,10 +52,10 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 bg-gradient-to-br from-blue-50 to-green-50">
+    <div className={`min-h-[80vh] flex items-center justify-center px-4 bg-gradient-to-br from-blue-50 to-green-50 ${language === 'ar' ? 'rtl' : 'ltr'}`}>
       <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-xl border-t-4 border-accent">
         <Link to="/" className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4 text-sm font-medium">
-          ← Back to Home
+          {language === 'ar' ? '→' : '←'} {t('backToHome')}
         </Link>
         <div className="text-center mb-6">
           <div className="inline-block p-3 bg-primary/10 rounded-full mb-3">
@@ -67,29 +69,35 @@ export default function Login() {
               <path d="M 133,300 L 148,340 L 190,340 L 156,365 L 171,405 L 133,380 L 95,405 L 110,365 L 76,340 L 118,340 Z" fill="#FCDD09"/>
             </svg>
           </div>
-          <h2 className="text-3xl font-bold text-primary">Login</h2>
-          <p className="text-gray-600 text-sm mt-1">Access your immigration portal</p>
+          <h2 className="text-3xl font-bold text-primary">{t('login')}</h2>
+          <p className="text-gray-600 text-sm mt-1">{t('accessPortal')}</p>
         </div>
         
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">Email</label>
+            <label className="block text-sm font-medium mb-1 text-gray-700">{t('email')}</label>
             <input
               type="email"
-              {...register('email', { required: 'Email is required' })}
+              {...register('email', { required: `${t('email')} ${t('required')}` })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             />
             {errors.email && <p className="text-danger text-sm mt-1">{errors.email.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">Password</label>
+            <label className="block text-sm font-medium mb-1 text-gray-700">{t('password')}</label>
             <input
               type="password"
-              {...register('password', { required: 'Password is required' })}
+              {...register('password', { required: `${t('password')} ${t('required')}` })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             />
             {errors.password && <p className="text-danger text-sm mt-1">{errors.password.message}</p>}
+          </div>
+
+          <div className="text-right">
+            <Link to="/forgot-password" className="text-sm text-primary hover:text-secondary font-medium transition">
+              {t('forgotPassword')}
+            </Link>
           </div>
 
           <button
@@ -97,14 +105,14 @@ export default function Login() {
             disabled={loading}
             className="w-full bg-gradient-to-r from-primary to-secondary text-white py-3 rounded-lg hover:shadow-lg transition disabled:opacity-50 font-semibold"
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? t('loggingIn') : t('login')}
           </button>
         </form>
 
         <p className="text-center mt-6 text-sm text-gray-600">
-          Don't have an account?{' '}
+          {t('dontHaveAccount')}{' '}
           <Link to="/register" className="text-primary hover:text-secondary font-semibold transition">
-            Register here
+            {t('registerHere')}
           </Link>
         </p>
       </div>
