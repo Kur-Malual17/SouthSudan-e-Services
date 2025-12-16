@@ -79,13 +79,13 @@ export default function Dashboard() {
         <h2 className="text-xl font-semibold mb-4 text-primary">Quick Links</h2>
         <div className="space-y-2">
           <Link to="/my-applications" className="block text-primary hover:text-secondary transition">
-            📋 View My Applications
+            View My Applications
           </Link>
           <Link to="/help" className="block text-primary hover:text-secondary transition">
-            ❓ Help & Support
+            Help & Support
           </Link>
           <Link to="/contact" className="block text-primary hover:text-secondary transition">
-            📞 Contact Us
+            Contact Us
           </Link>
         </div>
       </div>

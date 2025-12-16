@@ -77,19 +77,16 @@ export default function Help() {
         {/* Quick Links */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
           <Link to="/contact" className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition text-center border-t-4 border-blue-600">
-            <div className="text-3xl mb-2">📞</div>
             <h3 className="font-semibold text-blue-900">Contact Us</h3>
             <p className="text-sm text-gray-600 mt-1">Get in touch with our team</p>
           </Link>
           
           <Link to="/dashboard" className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition text-center border-t-4 border-green-600">
-            <div className="text-3xl mb-2">📋</div>
             <h3 className="font-semibold text-blue-900">Apply Now</h3>
             <p className="text-sm text-gray-600 mt-1">Start your application</p>
           </Link>
           
           <Link to="/my-applications" className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition text-center border-t-4 border-yellow-400">
-            <div className="text-3xl mb-2">🔍</div>
             <h3 className="font-semibold text-blue-900">Track Status</h3>
             <p className="text-sm text-gray-600 mt-1">Check your applications</p>
           </Link>

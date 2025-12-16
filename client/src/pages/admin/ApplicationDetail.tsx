@@ -172,7 +172,7 @@ export default function ApplicationDetail() {
                   onClick={() => setViewingImage(`http://localhost:8000${application.payment_proof}`)}
                   className="text-xs text-blue-600 hover:underline mt-1"
                 >
-                  🔍 Click to view full size
+                  Click to view full size
                 </button>
               </div>
             </div>
@@ -322,7 +322,7 @@ export default function ApplicationDetail() {
                     onClick={() => setViewingImage(`http://localhost:8000${application.photo}`)}
                     className="text-xs text-blue-600 hover:underline flex-1 text-left"
                   >
-                    🔍 View
+                    View
                   </button>
                   <a
                     href={`http://localhost:8000${application.photo}`}
@@ -330,7 +330,7 @@ export default function ApplicationDetail() {
                     rel="noopener noreferrer"
                     className="text-xs text-green-600 hover:underline"
                   >
-                    🔗 Open
+                    Open
                   </a>
                 </div>
               </div>
@@ -352,7 +352,7 @@ export default function ApplicationDetail() {
                   onClick={() => window.open(`http://localhost:8000${application.id_copy}`, '_blank', 'noopener,noreferrer')}
                   className="text-xs text-blue-600 hover:underline block mt-1 w-full text-left"
                 >
-                  📄 View Document
+                  View Document
                 </button>
               </div>
             )}
@@ -371,7 +371,7 @@ export default function ApplicationDetail() {
                   onClick={() => setViewingImage(`http://localhost:8000${application.signature}`)}
                   className="text-xs text-blue-600 mt-1 hover:underline w-full text-left"
                 >
-                  🔍 Click to view full size
+                  Click to view full size
                 </button>
               </div>
             )}
@@ -392,7 +392,7 @@ export default function ApplicationDetail() {
                   onClick={() => window.open(`http://localhost:8000${application.birth_certificate}`, '_blank', 'noopener,noreferrer')}
                   className="text-xs text-blue-600 hover:underline block mt-1 w-full text-left"
                 >
-                  📄 View Document
+                  View Document
                 </button>
               </div>
             )}
@@ -411,7 +411,7 @@ export default function ApplicationDetail() {
                   onClick={() => setViewingImage(`http://localhost:8000${application.passport_photo}`)}
                   className="text-xs text-blue-600 mt-1 hover:underline w-full text-left"
                 >
-                  🔍 Click to view full size
+                  Click to view full size
                 </button>
               </div>
             )}
@@ -432,7 +432,7 @@ export default function ApplicationDetail() {
                   onClick={() => window.open(`http://localhost:8000${application.supporting_documents}`, '_blank', 'noopener,noreferrer')}
                   className="text-xs text-blue-600 hover:underline block mt-1 w-full text-left"
                 >
-                  📄 View Document
+                  View Document
                 </button>
               </div>
             )}
@@ -453,7 +453,7 @@ export default function ApplicationDetail() {
                   onClick={() => window.open(`http://localhost:8000${application.police_report}`, '_blank', 'noopener,noreferrer')}
                   className="text-xs text-blue-600 hover:underline block mt-1 w-full text-left"
                 >
-                  📄 View Document
+                  View Document
                 </button>
               </div>
             )}
@@ -474,7 +474,7 @@ export default function ApplicationDetail() {
                   onClick={() => window.open(`http://localhost:8000${application.affidavit}`, '_blank', 'noopener,noreferrer')}
                   className="text-xs text-blue-600 hover:underline block mt-1 w-full text-left"
                 >
-                  📄 View Document
+                  View Document
                 </button>
               </div>
             )}
@@ -589,7 +589,7 @@ export default function ApplicationDetail() {
                 className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 inline-block"
                 onClick={(e) => e.stopPropagation()}
               >
-                🔗 Open in New Tab
+                Open in New Tab
               </a>
               <a 
                 href={viewingImage} 
@@ -597,7 +597,7 @@ export default function ApplicationDetail() {
                 className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 inline-block"
                 onClick={(e) => e.stopPropagation()}
               >
-                📥 Download Image
+                Download Image
               </a>
             </div>
           </div>

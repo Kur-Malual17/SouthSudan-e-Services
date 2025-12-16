@@ -119,7 +119,6 @@ export default function Contact() {
               
               <div className="space-y-4">
                 <div className="flex items-start space-x-4">
-                  <div className="text-2xl">📍</div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Office Location</h3>
                     <p className="text-gray-600">Immigration Head Office</p>
@@ -128,7 +127,6 @@ export default function Contact() {
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="text-2xl">📞</div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Phone</h3>
                     <p className="text-gray-600">+211 924828569</p>
@@ -136,7 +134,6 @@ export default function Contact() {
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="text-2xl">✉️</div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Email</h3>
                     <p className="text-gray-600">info@immigration.gov.ss</p>
@@ -144,7 +141,6 @@ export default function Contact() {
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="text-2xl">🕐</div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Office Hours</h3>
                     <p className="text-gray-600">Monday - Friday</p>

@@ -137,7 +137,7 @@ export default function Layout() {
                       <Link to="/admin" onClick={() => setMobileMenuOpen(false)} className="hover:text-yellow-300 transition text-sm py-2">Admin</Link>
                     )}
                     <div className="text-sm bg-white/10 px-3 py-2 rounded">User: {user.firstName} {user.lastName}</div>
-                    <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="bg-red-600 px-4 py-2 rounded hover:bg-red-700 transition text-sm text-left">
+                    <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="bg-gradient-to-r from-green-600 to-teal-600 px-4 py-2 rounded hover:from-green-700 hover:to-teal-700 transition text-sm text-left">
                       Logout
                     </button>
                   </>
