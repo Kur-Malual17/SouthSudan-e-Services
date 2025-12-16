@@ -115,8 +115,13 @@ CSRF_TRUSTED_ORIGINS = [
     'https://south-sudan-e-services-8546902ip-kur-malual17s-projects.vercel.app',
 ]
 CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_NAME = 'csrftoken'
+
+# Session cookie settings for cross-origin
+SESSION_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SECURE = True
 
 # Disable CSRF for DRF views (we're using session auth with CORS)
 from rest_framework.authentication import SessionAuthentication
