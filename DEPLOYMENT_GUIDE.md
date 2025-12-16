@@ -1,8 +1,8 @@
 # Deployment Guide - South Sudan e-Services
 
 ## Current Status
-- ✅ **Frontend**: Deployed on Vercel
-- ❌ **Backend**: Not deployed (still on localhost)
+- ✅ **Frontend**: Deployed on Vercel at https://south-sudan-e-services-8546902ip-kur-malual17s-projects.vercel.app
+- ✅ **Backend**: Deployed on Render at https://southsudan-e-services.onrender.com
 
 ## Problem
 Your frontend on Vercel is trying to connect to `http://localhost:8000/api/` which doesn't exist in production. You need to deploy the backend.
