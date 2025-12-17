@@ -113,31 +113,69 @@ class ApplicationListSerializer(serializers.ModelSerializer):
 
 
 class NewsArticleSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField()
+    
+    def get_image_url(self, obj):
+        """Safely get image URL"""
+        try:
+            if obj.image and hasattr(obj.image, 'url'):
+                return obj.image.url
+        except Exception:
+            return None
+        return None
+    
     class Meta:
         model = NewsArticle
         fields = ['id', 'title', 'title_ar', 'content', 'content_ar', 'excerpt', 'excerpt_ar', 
-                 'image', 'author', 'author_name', 'published', 'featured', 'created_at', 'updated_at']
-        read_only_fields = ['author', 'created_at', 'updated_at']
+                 'image', 'image_url', 'author', 'author_name', 'published', 'featured', 'created_at', 'updated_at']
+        read_only_fields = ['author', 'created_at', 'updated_at', 'image_url']
 
 
 class BlogPostSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField()
+    
+    def get_image_url(self, obj):
+        """Safely get image URL"""
+        try:
+            if obj.image and hasattr(obj.image, 'url'):
+                return obj.image.url
+        except Exception:
+            return None
+        return None
+    
     class Meta:
         model = BlogPost
         fields = ['id', 'title', 'title_ar', 'content', 'content_ar', 'excerpt', 'excerpt_ar', 
-                 'image', 'author', 'author_name', 'category', 'published', 'featured', 
+                 'image', 'image_url', 'author', 'author_name', 'category', 'published', 'featured', 
                  'created_at', 'updated_at']
-        read_only_fields = ['author', 'created_at', 'updated_at']
+        read_only_fields = ['author', 'created_at', 'updated_at', 'image_url']
 
 
 class GalleryImageSerializer(serializers.ModelSerializer):
     author_name = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField()
     
     def get_author_name(self, obj):
         """Safely get author_name field"""
         return getattr(obj, 'author_name', '')
     
+    def get_image_url(self, obj):
+        """Safely get image URL"""
+        try:
+            if obj.image and hasattr(obj.image, 'url'):
+                return obj.image.url
+        except Exception:
+            return None
+        return None
+    
+    def create(self, validated_data):
+        """Set uploaded_by from request user"""
+        if 'uploaded_by' not in validated_data and self.context.get('request'):
+            validated_data['uploaded_by'] = self.context['request'].user
+        return super().create(validated_data)
+    
     class Meta:
         model = GalleryImage
         fields = ['id', 'title', 'title_ar', 'description', 'description_ar', 'image', 
-                 'category', 'author_name', 'published', 'featured', 'uploaded_by', 'created_at']
-        read_only_fields = ['uploaded_by', 'created_at', 'author_name']
+                 'image_url', 'category', 'author_name', 'published', 'featured', 'uploaded_by', 'created_at']
+        read_only_fields = ['uploaded_by', 'created_at', 'author_name', 'image_url']

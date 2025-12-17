@@ -172,8 +172,12 @@ class GalleryImageAdmin(admin.ModelAdmin):
     )
     
     def image_preview(self, obj):
-        if obj.image:
-            return format_html('<img src="{}" style="max-height: 200px; max-width: 300px;" />', obj.image.url)
+        """Safely display image preview"""
+        try:
+            if obj.image and hasattr(obj.image, 'url'):
+                return format_html('<img src="{}" style="max-height: 200px; max-width: 300px;" />', obj.image.url)
+        except Exception:
+            return "Image error"
         return "No image"
     image_preview.short_description = 'Preview'
     
