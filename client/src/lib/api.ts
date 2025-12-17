@@ -17,6 +17,9 @@ function getCookie(name: string) {
   return cookieValue;
 }
 
+// Export the backend URL for media files
+export const BACKEND_URL = (import.meta.env.VITE_API_URL || 'https://southsudan-e-services.onrender.com/api').replace('/api', '');
+
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'https://southsudan-e-services.onrender.com/api',
   headers: {

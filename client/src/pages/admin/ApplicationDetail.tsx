@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import api from '../../lib/api';
+import api, { BACKEND_URL } from '../../lib/api';
 import toast from 'react-hot-toast';
 
 export default function ApplicationDetail() {
@@ -163,13 +163,13 @@ export default function ApplicationDetail() {
               <div>
                 <p className="text-sm font-medium mb-2 text-gray-700">Payment Proof:</p>
                 <img 
-                  src={`http://localhost:8000${application.payment_proof}`} 
+                  src={`${BACKEND_URL}${application.payment_proof}`} 
                   alt="Payment Proof" 
                   className="w-full max-w-xs h-48 object-contain border rounded cursor-pointer hover:opacity-80"
-                  onClick={() => setViewingImage(`http://localhost:8000${application.payment_proof}`)}
+                  onClick={() => setViewingImage(`${BACKEND_URL}${application.payment_proof}`)}
                 />
                 <button
-                  onClick={() => setViewingImage(`http://localhost:8000${application.payment_proof}`)}
+                  onClick={() => setViewingImage(`${BACKEND_URL}${application.payment_proof}`)}
                   className="text-xs text-blue-600 hover:underline mt-1"
                 >
                   Click to view full size
@@ -308,10 +308,10 @@ export default function ApplicationDetail() {
               <div className="border rounded p-2 hover:shadow-lg transition">
                 <p className="text-xs font-medium mb-1 text-gray-700">Passport Photo</p>
                 <img 
-                  src={`http://localhost:8000${application.photo}`} 
+                  src={`${BACKEND_URL}${application.photo}`} 
                   alt="Photo" 
                   className="w-full h-32 object-cover rounded cursor-pointer hover:opacity-80"
-                  onClick={() => setViewingImage(`http://localhost:8000${application.photo}`)}
+                  onClick={() => setViewingImage(`${BACKEND_URL}${application.photo}`)}
                   onError={(e) => {
                     console.error('Failed to load photo:', application.photo);
                     e.currentTarget.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text x="10" y="50">Image not found</text></svg>';
@@ -319,13 +319,13 @@ export default function ApplicationDetail() {
                 />
                 <div className="flex gap-2 mt-1">
                   <button
-                    onClick={() => setViewingImage(`http://localhost:8000${application.photo}`)}
+                    onClick={() => setViewingImage(`${BACKEND_URL}${application.photo}`)}
                     className="text-xs text-blue-600 hover:underline flex-1 text-left"
                   >
                     View
                   </button>
                   <a
-                    href={`http://localhost:8000${application.photo}`}
+                    href={`${BACKEND_URL}${application.photo}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xs text-green-600 hover:underline"
@@ -342,14 +342,14 @@ export default function ApplicationDetail() {
                 <p className="text-xs font-medium mb-1 text-gray-700">ID Copy</p>
                 <div 
                   className="flex items-center justify-center h-32 bg-gray-100 rounded cursor-pointer hover:bg-gray-200"
-                  onClick={() => window.open(`http://localhost:8000${application.id_copy}`, '_blank', 'noopener,noreferrer')}
+                  onClick={() => window.open(`${BACKEND_URL}${application.id_copy}`, '_blank', 'noopener,noreferrer')}
                 >
                   <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                   </svg>
                 </div>
                 <button
-                  onClick={() => window.open(`http://localhost:8000${application.id_copy}`, '_blank', 'noopener,noreferrer')}
+                  onClick={() => window.open(`${BACKEND_URL}${application.id_copy}`, '_blank', 'noopener,noreferrer')}
                   className="text-xs text-blue-600 hover:underline block mt-1 w-full text-left"
                 >
                   View Document
@@ -362,13 +362,13 @@ export default function ApplicationDetail() {
               <div className="border rounded p-2 hover:shadow-lg transition">
                 <p className="text-xs font-medium mb-1 text-gray-700">Signature</p>
                 <img 
-                  src={`http://localhost:8000${application.signature}`} 
+                  src={`${BACKEND_URL}${application.signature}`} 
                   alt="Signature" 
                   className="w-full h-32 object-contain rounded cursor-pointer hover:opacity-80 bg-gray-50"
-                  onClick={() => setViewingImage(`http://localhost:8000${application.signature}`)}
+                  onClick={() => setViewingImage(`${BACKEND_URL}${application.signature}`)}
                 />
                 <button
-                  onClick={() => setViewingImage(`http://localhost:8000${application.signature}`)}
+                  onClick={() => setViewingImage(`${BACKEND_URL}${application.signature}`)}
                   className="text-xs text-blue-600 mt-1 hover:underline w-full text-left"
                 >
                   Click to view full size
@@ -382,14 +382,14 @@ export default function ApplicationDetail() {
                 <p className="text-xs font-medium mb-1 text-gray-700">Birth Certificate</p>
                 <div 
                   className="flex items-center justify-center h-32 bg-gray-100 rounded cursor-pointer hover:bg-gray-200"
-                  onClick={() => window.open(`http://localhost:8000${application.birth_certificate}`, '_blank', 'noopener,noreferrer')}
+                  onClick={() => window.open(`${BACKEND_URL}${application.birth_certificate}`, '_blank', 'noopener,noreferrer')}
                 >
                   <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </div>
                 <button
-                  onClick={() => window.open(`http://localhost:8000${application.birth_certificate}`, '_blank', 'noopener,noreferrer')}
+                  onClick={() => window.open(`${BACKEND_URL}${application.birth_certificate}`, '_blank', 'noopener,noreferrer')}
                   className="text-xs text-blue-600 hover:underline block mt-1 w-full text-left"
                 >
                   View Document
@@ -402,13 +402,13 @@ export default function ApplicationDetail() {
               <div className="border rounded p-2 hover:shadow-lg transition">
                 <p className="text-xs font-medium mb-1 text-gray-700">Passport Photo</p>
                 <img 
-                  src={`http://localhost:8000${application.passport_photo}`} 
+                  src={`${BACKEND_URL}${application.passport_photo}`} 
                   alt="Passport Photo" 
                   className="w-full h-32 object-cover rounded cursor-pointer hover:opacity-80"
-                  onClick={() => setViewingImage(`http://localhost:8000${application.passport_photo}`)}
+                  onClick={() => setViewingImage(`${BACKEND_URL}${application.passport_photo}`)}
                 />
                 <button
-                  onClick={() => setViewingImage(`http://localhost:8000${application.passport_photo}`)}
+                  onClick={() => setViewingImage(`${BACKEND_URL}${application.passport_photo}`)}
                   className="text-xs text-blue-600 mt-1 hover:underline w-full text-left"
                 >
                   Click to view full size
@@ -422,14 +422,14 @@ export default function ApplicationDetail() {
                 <p className="text-xs font-medium mb-1 text-gray-700">Supporting Documents</p>
                 <div 
                   className="flex items-center justify-center h-32 bg-gray-100 rounded cursor-pointer hover:bg-gray-200"
-                  onClick={() => window.open(`http://localhost:8000${application.supporting_documents}`, '_blank', 'noopener,noreferrer')}
+                  onClick={() => window.open(`${BACKEND_URL}${application.supporting_documents}`, '_blank', 'noopener,noreferrer')}
                 >
                   <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </div>
                 <button
-                  onClick={() => window.open(`http://localhost:8000${application.supporting_documents}`, '_blank', 'noopener,noreferrer')}
+                  onClick={() => window.open(`${BACKEND_URL}${application.supporting_documents}`, '_blank', 'noopener,noreferrer')}
                   className="text-xs text-blue-600 hover:underline block mt-1 w-full text-left"
                 >
                   View Document
@@ -443,14 +443,14 @@ export default function ApplicationDetail() {
                 <p className="text-xs font-medium mb-1 text-gray-700">Police Report</p>
                 <div 
                   className="flex items-center justify-center h-32 bg-gray-100 rounded cursor-pointer hover:bg-gray-200"
-                  onClick={() => window.open(`http://localhost:8000${application.police_report}`, '_blank', 'noopener,noreferrer')}
+                  onClick={() => window.open(`${BACKEND_URL}${application.police_report}`, '_blank', 'noopener,noreferrer')}
                 >
                   <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </div>
                 <button
-                  onClick={() => window.open(`http://localhost:8000${application.police_report}`, '_blank', 'noopener,noreferrer')}
+                  onClick={() => window.open(`${BACKEND_URL}${application.police_report}`, '_blank', 'noopener,noreferrer')}
                   className="text-xs text-blue-600 hover:underline block mt-1 w-full text-left"
                 >
                   View Document
@@ -464,14 +464,14 @@ export default function ApplicationDetail() {
                 <p className="text-xs font-medium mb-1 text-gray-700">Affidavit</p>
                 <div 
                   className="flex items-center justify-center h-32 bg-gray-100 rounded cursor-pointer hover:bg-gray-200"
-                  onClick={() => window.open(`http://localhost:8000${application.affidavit}`, '_blank', 'noopener,noreferrer')}
+                  onClick={() => window.open(`${BACKEND_URL}${application.affidavit}`, '_blank', 'noopener,noreferrer')}
                 >
                   <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </div>
                 <button
-                  onClick={() => window.open(`http://localhost:8000${application.affidavit}`, '_blank', 'noopener,noreferrer')}
+                  onClick={() => window.open(`${BACKEND_URL}${application.affidavit}`, '_blank', 'noopener,noreferrer')}
                   className="text-xs text-blue-600 hover:underline block mt-1 w-full text-left"
                 >
                   View Document

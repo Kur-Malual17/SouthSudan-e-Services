@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { BACKEND_URL } from '../../lib/api';
 
 export default function NationalIdCorrection() {
   const navigate = useNavigate();
@@ -73,7 +74,7 @@ export default function NationalIdCorrection() {
         headers['X-CSRFToken'] = csrfToken;
       }
 
-      const response = await fetch('http://localhost:8000/api/applications/', {
+      const response = await fetch(`${BACKEND_URL}/api/applications/`, {
         method: 'POST',
         credentials: 'include',
         headers,

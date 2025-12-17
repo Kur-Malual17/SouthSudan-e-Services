@@ -422,32 +422,54 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def approve(self, request, pk=None):
         """Approve an application (Admin/Supervisor only)"""
-        if request.user.profile.role not in ['admin', 'supervisor']:
-            return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+        import logging
+        logger = logging.getLogger(__name__)
         
-        application = self.get_object()
-        
-        if application.payment_status != 'completed':
-            return Response({'error': 'Payment not completed'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        # Update application
-        application.status = 'approved'
-        application.reviewed_by = request.user
-        application.reviewed_at = timezone.now()
-        
-        # Generate PDF
-        pdf_path = generate_pdf(application)
-        application.approved_pdf = pdf_path
-        application.save()
-        
-        # Send email
-        send_approval_email(application)
-        
-        return Response({
-            'success': True,
-            'message': 'Application approved and email sent',
-            'application': ApplicationSerializer(application).data
-        })
+        try:
+            if request.user.profile.role not in ['admin', 'supervisor']:
+                return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+            
+            application = self.get_object()
+            
+            if application.payment_status != 'completed':
+                return Response({'error': 'Payment not completed. Please verify payment first.'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Update application
+            application.status = 'approved'
+            application.reviewed_by = request.user
+            application.reviewed_at = timezone.now()
+            
+            # Generate PDF
+            try:
+                pdf_path = generate_pdf(application)
+                application.approved_pdf = pdf_path
+                logger.info(f"PDF generated successfully: {pdf_path}")
+            except Exception as e:
+                logger.error(f"Error generating PDF: {str(e)}")
+                # Continue even if PDF generation fails
+                application.approved_pdf = None
+            
+            application.save()
+            
+            # Send email
+            try:
+                send_approval_email(application)
+                logger.info(f"Approval email sent to {application.email}")
+            except Exception as e:
+                logger.error(f"Error sending approval email: {str(e)}")
+                # Continue even if email fails
+            
+            return Response({
+                'success': True,
+                'message': 'Application approved successfully',
+                'application': ApplicationSerializer(application).data
+            })
+            
+        except Exception as e:
+            logger.error(f"Error approving application: {str(e)}")
+            return Response({
+                'error': f'Failed to approve application: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def reject(self, request, pk=None):
