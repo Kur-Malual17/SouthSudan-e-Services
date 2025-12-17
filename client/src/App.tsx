@@ -25,6 +25,8 @@ import AdminApplications from './pages/admin/AdminApplications';
 import ApplicationDetail from './pages/admin/ApplicationDetail';
 import Contact from './pages/Contact';
 import Help from './pages/Help';
+import NewsDetail from './pages/NewsDetail';
+import BlogDetail from './pages/BlogDetail';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuthStore();
@@ -77,6 +79,8 @@ function App() {
         
         <Route path="contact" element={<Contact />} />
         <Route path="help" element={<Help />} />
+        <Route path="news/:id" element={<NewsDetail />} />
+        <Route path="blog/:id" element={<BlogDetail />} />
       </Route>
     </Routes>
   );
