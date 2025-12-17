@@ -172,10 +172,10 @@ export default function Home() {
         <div className="w-20 sm:w-24 h-1 bg-yellow-400 mx-auto mb-8 sm:mb-12"></div>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {[
-            { step: '1', title: t('createAccount') },
+            { step: '1', title: t('createAccountStep') },
             { step: '2', title: t('chooseServiceText') },
             { step: '3', title: t('fillForm') },
-            { step: '4', title: t('makePayment') },
+            { step: '4', title: t('makePaymentStep') },
             { step: '5', title: t('getDocument') },
           ].map((item) => (
             <div key={item.step} className="text-center">

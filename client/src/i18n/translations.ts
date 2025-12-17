@@ -173,10 +173,10 @@ export const translations = {
     applyAnywhere: 'Apply Anywhere',
     applyAnywhereDesc: 'No need to visit offices - apply from anywhere',
     howItWorks: 'How It Works',
-    createAccount: 'Create Account',
+    createAccountStep: 'Create Account',
     chooseServiceText: 'Choose Service',
     fillForm: 'Fill Form',
-    makePayment: 'Make Payment',
+    makePaymentStep: 'Make Payment',
     getDocument: 'Get Document',
     
     // My Applications
@@ -379,10 +379,10 @@ export const translations = {
     applyAnywhere: 'قدم من أي مكان',
     applyAnywhereDesc: 'لا حاجة لزيارة المكاتب - قدم من أي مكان',
     howItWorks: 'كيف يعمل',
-    createAccount: 'إنشاء حساب',
+    createAccountStep: 'إنشاء حساب',
     chooseServiceText: 'اختر الخدمة',
     fillForm: 'املأ النموذج',
-    makePayment: 'ادفع',
+    makePaymentStep: 'ادفع',
     getDocument: 'احصل على الوثيقة',
     
     // My Applications

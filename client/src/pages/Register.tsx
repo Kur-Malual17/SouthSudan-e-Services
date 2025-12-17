@@ -20,7 +20,7 @@ export default function Register() {
   const { setAuth } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<RegisterForm>();
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
 
   const onSubmit = async (data: RegisterForm) => {
     if (data.password !== data.confirmPassword) {
