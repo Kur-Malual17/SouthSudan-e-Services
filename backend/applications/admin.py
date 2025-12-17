@@ -81,10 +81,14 @@ class ApplicationAdmin(admin.ModelAdmin):
 
 @admin.register(NewsArticle)
 class NewsArticleAdmin(admin.ModelAdmin):
-    list_display = ['title', 'author_name', 'published', 'featured', 'created_at']
+    list_display = ['title', 'get_author_display', 'published', 'featured', 'created_at']
     list_filter = ['published', 'featured', 'created_at']
-    search_fields = ['title', 'title_ar', 'content', 'content_ar', 'author_name']
+    search_fields = ['title', 'title_ar', 'content', 'content_ar']
     readonly_fields = ['created_at', 'updated_at']
+    
+    def get_author_display(self, obj):
+        return obj.author_name if hasattr(obj, 'author_name') and obj.author_name else '-'
+    get_author_display.short_description = 'Author'
     
     fieldsets = (
         ('English Content', {
@@ -111,10 +115,14 @@ class NewsArticleAdmin(admin.ModelAdmin):
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'category', 'author_name', 'published', 'featured', 'created_at']
+    list_display = ['title', 'category', 'get_author_display', 'published', 'featured', 'created_at']
     list_filter = ['published', 'featured', 'category', 'created_at']
-    search_fields = ['title', 'title_ar', 'content', 'content_ar', 'category', 'author_name']
+    search_fields = ['title', 'title_ar', 'content', 'content_ar', 'category']
     readonly_fields = ['created_at', 'updated_at']
+    
+    def get_author_display(self, obj):
+        return obj.author_name if hasattr(obj, 'author_name') and obj.author_name else '-'
+    get_author_display.short_description = 'Author'
     
     fieldsets = (
         ('English Content', {
