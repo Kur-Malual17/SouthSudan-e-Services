@@ -280,11 +280,11 @@ export default function ContentSection() {
                 onClick={() => window.open(getImageUrl(image.image), '_blank')}
                 className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 group cursor-pointer transform hover:-translate-y-1"
               >
-                <div className="relative overflow-hidden h-56">
+                <div className="relative overflow-hidden h-56 bg-gray-100">
                   <img
                     src={getImageUrl(image.image)}
                     alt={getTitle(image)}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="absolute bottom-0 left-0 right-0 p-4">

@@ -130,10 +130,8 @@ class BlogPostSerializer(serializers.ModelSerializer):
 
 
 class GalleryImageSerializer(serializers.ModelSerializer):
-    uploaded_by_name = serializers.CharField(source='uploaded_by.get_full_name', read_only=True)
-    
     class Meta:
         model = GalleryImage
         fields = ['id', 'title', 'title_ar', 'description', 'description_ar', 'image', 
-                 'category', 'published', 'featured', 'uploaded_by', 'uploaded_by_name', 'created_at']
+                 'category', 'author_name', 'published', 'featured', 'uploaded_by', 'created_at']
         read_only_fields = ['uploaded_by', 'created_at']

@@ -155,7 +155,7 @@ class GalleryImageAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
         ('Settings', {
-            'fields': ('uploaded_by', 'published', 'featured')
+            'fields': ('author_name', 'published', 'featured')
         }),
         ('Timestamp', {
             'fields': ('created_at',),

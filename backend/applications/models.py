@@ -319,9 +319,10 @@ class GalleryImage(models.Model):
     description_ar = models.TextField(blank=True, help_text="Arabic translation of description")
     image = models.ImageField(upload_to='gallery/')
     category = models.CharField(max_length=100, blank=True, help_text="e.g., Events, Facilities, Staff")
+    author_name = models.CharField(max_length=200, blank=True, help_text="Photographer or source (e.g., 'Immigration Department')")
     published = models.BooleanField(default=True)
     featured = models.BooleanField(default=False, help_text="Show in featured section")
-    uploaded_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    uploaded_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
