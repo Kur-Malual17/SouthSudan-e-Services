@@ -754,8 +754,8 @@ def get_paystack_public_key(request):
 
 
 # Content Management Views (News, Blog, Gallery)
-from .models import NewsArticle, BlogPost, GalleryImage
-from .serializers import NewsArticleSerializer, BlogPostSerializer, GalleryImageSerializer
+from .models import NewsArticle, BlogPost
+from .serializers import NewsArticleSerializer, BlogPostSerializer
 
 class NewsArticleViewSet(viewsets.ReadOnlyModelViewSet):
     """Public read-only access to published news articles"""
@@ -780,25 +780,6 @@ class BlogPostViewSet(viewsets.ReadOnlyModelViewSet):
     
     def get_queryset(self):
         queryset = BlogPost.objects.filter(published=True)
-        # Filter by featured if requested
-        featured = self.request.query_params.get('featured', None)
-        if featured == 'true':
-            queryset = queryset.filter(featured=True)
-        # Filter by category if requested
-        category = self.request.query_params.get('category', None)
-        if category:
-            queryset = queryset.filter(category=category)
-        return queryset
-
-
-class GalleryImageViewSet(viewsets.ReadOnlyModelViewSet):
-    """Public read-only access to published gallery images"""
-    serializer_class = GalleryImageSerializer
-    permission_classes = [AllowAny]
-    pagination_class = None  # Disable pagination for simpler API response
-    
-    def get_queryset(self):
-        queryset = GalleryImage.objects.filter(published=True)
         # Filter by featured if requested
         featured = self.request.query_params.get('featured', None)
         if featured == 'true':

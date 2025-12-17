@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import UserProfile, Application, NewsArticle, BlogPost, GalleryImage
+from .models import UserProfile, Application, NewsArticle, BlogPost
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
@@ -147,41 +147,4 @@ class BlogPostAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
-@admin.register(GalleryImage)
-class GalleryImageAdmin(admin.ModelAdmin):
-    list_display = ['title', 'category', 'published', 'featured', 'image_preview', 'created_at']
-    list_filter = ['published', 'featured', 'category', 'created_at']
-    search_fields = ['title', 'title_ar', 'description', 'description_ar', 'category']
-    readonly_fields = ['created_at', 'image_preview']
-    
-    fieldsets = (
-        ('English Content', {
-            'fields': ('title', 'description', 'image', 'image_preview', 'category')
-        }),
-        ('Arabic Translation', {
-            'fields': ('title_ar', 'description_ar'),
-            'classes': ('collapse',)
-        }),
-        ('Settings', {
-            'fields': ('author_name', 'published', 'featured')
-        }),
-        ('Timestamp', {
-            'fields': ('created_at',),
-            'classes': ('collapse',)
-        }),
-    )
-    
-    def image_preview(self, obj):
-        """Safely display image preview"""
-        try:
-            if obj.image and hasattr(obj.image, 'url'):
-                return format_html('<img src="{}" style="max-height: 200px; max-width: 300px;" />', obj.image.url)
-        except Exception:
-            return "Image error"
-        return "No image"
-    image_preview.short_description = 'Preview'
-    
-    def save_model(self, request, obj, form, change):
-        if not obj.uploaded_by:
-            obj.uploaded_by = request.user
-        super().save_model(request, obj, form, change)
+
