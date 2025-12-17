@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import api, { BACKEND_URL } from '../lib/api';
 import { useTranslation } from '../hooks/useTranslation';
-import toast from 'react-hot-toast';
 
 interface NewsArticle {
   id: number;
@@ -70,10 +69,6 @@ export default function ContentSection() {
 
   const getExcerpt = (item: any) => {
     return language === 'ar' && item.excerpt_ar ? item.excerpt_ar : item.excerpt;
-  };
-
-  const getDescription = (item: any) => {
-    return language === 'ar' && item.description_ar ? item.description_ar : item.description;
   };
 
   if (loading) {
