@@ -55,11 +55,23 @@ class Command(BaseCommand):
                 
                 if not gallery_exists:
                     self.stdout.write('Adding author_name to GalleryImage...')
-                    cursor.execute("""
-                        ALTER TABLE applications_galleryimage 
-                        ADD COLUMN author_name VARCHAR(200) DEFAULT '' NOT NULL;
-                    """)
-                    self.stdout.write(self.style.SUCCESS('✓ Added author_name to GalleryImage'))
+                    try:
+                        cursor.execute("""
+                            ALTER TABLE applications_galleryimage 
+                            ADD COLUMN author_name VARCHAR(200) DEFAULT '' NOT NULL;
+                        """)
+                        self.stdout.write(self.style.SUCCESS('✓ Added author_name to GalleryImage'))
+                    except Exception as gallery_error:
+                        self.stdout.write(self.style.ERROR(f'Failed to add to GalleryImage: {str(gallery_error)}'))
+                        # Try without NOT NULL constraint
+                        try:
+                            cursor.execute("""
+                                ALTER TABLE applications_galleryimage 
+                                ADD COLUMN author_name VARCHAR(200) DEFAULT '';
+                            """)
+                            self.stdout.write(self.style.SUCCESS('✓ Added author_name to GalleryImage (without NOT NULL)'))
+                        except Exception as e2:
+                            self.stdout.write(self.style.ERROR(f'Still failed: {str(e2)}'))
                 else:
                     self.stdout.write(self.style.WARNING('author_name already exists in GalleryImage'))
                 
