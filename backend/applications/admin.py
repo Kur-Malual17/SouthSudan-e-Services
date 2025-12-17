@@ -81,9 +81,9 @@ class ApplicationAdmin(admin.ModelAdmin):
 
 @admin.register(NewsArticle)
 class NewsArticleAdmin(admin.ModelAdmin):
-    list_display = ['title', 'author', 'published', 'featured', 'created_at']
+    list_display = ['title', 'author_name', 'published', 'featured', 'created_at']
     list_filter = ['published', 'featured', 'created_at']
-    search_fields = ['title', 'title_ar', 'content', 'content_ar']
+    search_fields = ['title', 'title_ar', 'content', 'content_ar', 'author_name']
     readonly_fields = ['created_at', 'updated_at']
     
     fieldsets = (
@@ -95,7 +95,7 @@ class NewsArticleAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
         ('Settings', {
-            'fields': ('author', 'published', 'featured')
+            'fields': ('author_name', 'published', 'featured')
         }),
         ('Timestamps', {
             'fields': ('created_at', 'updated_at'),
@@ -111,9 +111,9 @@ class NewsArticleAdmin(admin.ModelAdmin):
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'category', 'author', 'published', 'featured', 'created_at']
+    list_display = ['title', 'category', 'author_name', 'published', 'featured', 'created_at']
     list_filter = ['published', 'featured', 'category', 'created_at']
-    search_fields = ['title', 'title_ar', 'content', 'content_ar', 'category']
+    search_fields = ['title', 'title_ar', 'content', 'content_ar', 'category', 'author_name']
     readonly_fields = ['created_at', 'updated_at']
     
     fieldsets = (
@@ -125,7 +125,7 @@ class BlogPostAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
         ('Settings', {
-            'fields': ('author', 'published', 'featured')
+            'fields': ('author_name', 'published', 'featured')
         }),
         ('Timestamps', {
             'fields': ('created_at', 'updated_at'),

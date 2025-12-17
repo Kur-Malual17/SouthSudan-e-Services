@@ -113,8 +113,6 @@ class ApplicationListSerializer(serializers.ModelSerializer):
 
 
 class NewsArticleSerializer(serializers.ModelSerializer):
-    author_name = serializers.CharField(source='author.get_full_name', read_only=True)
-    
     class Meta:
         model = NewsArticle
         fields = ['id', 'title', 'title_ar', 'content', 'content_ar', 'excerpt', 'excerpt_ar', 
@@ -123,8 +121,6 @@ class NewsArticleSerializer(serializers.ModelSerializer):
 
 
 class BlogPostSerializer(serializers.ModelSerializer):
-    author_name = serializers.CharField(source='author.get_full_name', read_only=True)
-    
     class Meta:
         model = BlogPost
         fields = ['id', 'title', 'title_ar', 'content', 'content_ar', 'excerpt', 'excerpt_ar', 

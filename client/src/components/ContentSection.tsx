@@ -181,11 +181,11 @@ export default function ContentSection() {
                 className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
               >
                 {article.image && (
-                  <div className="relative h-48 overflow-hidden">
+                  <div className="relative h-48 overflow-hidden bg-gray-100">
                     <img
                       src={getImageUrl(article.image)}
                       alt={getTitle(article)}
-                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                      className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
                     />
                     <div className="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
                       {language === 'ar' ? 'خبر' : 'News'}
@@ -230,11 +230,11 @@ export default function ContentSection() {
                 className="bg-gradient-to-br from-white to-green-50 rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 border border-green-100"
               >
                 {post.image && (
-                  <div className="relative h-48 overflow-hidden">
+                  <div className="relative h-48 overflow-hidden bg-gray-100">
                     <img
                       src={getImageUrl(post.image)}
                       alt={getTitle(post)}
-                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                      className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
                     />
                     {post.category && (
                       <div className="absolute top-4 left-4 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold">

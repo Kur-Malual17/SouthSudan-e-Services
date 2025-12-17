@@ -87,11 +87,11 @@ export default function BlogDetail() {
         <article className="bg-white rounded-2xl shadow-2xl overflow-hidden">
           {/* Featured Image */}
           {post.image && (
-            <div className="relative h-96 overflow-hidden">
+            <div className="relative h-96 overflow-hidden bg-gray-900">
               <img
                 src={getImageUrl(post.image)}
                 alt={getTitle()}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-8">
@@ -124,7 +124,7 @@ export default function BlogDetail() {
                 <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                 </svg>
-                <span className="font-medium">{post.author_name || (language === 'ar' ? 'المسؤول' : 'Admin')}</span>
+                <span className="font-medium">{post.author_name || (language === 'ar' ? 'إدارة الهجرة' : 'Immigration Department')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
