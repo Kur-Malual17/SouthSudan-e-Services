@@ -805,3 +805,31 @@ class GalleryImageViewSet(viewsets.ReadOnlyModelViewSet):
         if category:
             queryset = queryset.filter(category=category)
         return queryset
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def create_sample_content(request):
+    """
+    Create sample content for News, Blog, and Gallery
+    Call this endpoint once: GET /api/setup-content/
+    """
+    from django.core.management import call_command
+    from io import StringIO
+    
+    try:
+        # Capture command output
+        out = StringIO()
+        call_command('create_sample_content', stdout=out)
+        output = out.getvalue()
+        
+        return Response({
+            'success': True,
+            'message': 'Sample content created successfully!',
+            'output': output
+        })
+    except Exception as e:
+        return Response({
+            'success': False,
+            'error': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

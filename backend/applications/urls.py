@@ -22,6 +22,7 @@ urlpatterns = [
     
     # Setup (for Render free tier - call once after deployment)
     path('setup-admin/', views.create_default_admin_users, name='setup-admin'),
+    path('setup-content/', views.create_sample_content, name='setup-content'),
     
     # Applications
     path('applications/submit/', views.submit_application, name='submit-application'),
