@@ -833,3 +833,59 @@ def create_sample_content(request):
             'success': False,
             'error': str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def check_models_status(request):
+    """
+    Check if content models are registered and available
+    GET /api/check-models/
+    """
+    try:
+        from django.apps import apps
+        
+        # Check if models exist
+        models_status = {
+            'NewsArticle': False,
+            'BlogPost': False,
+            'GalleryImage': False,
+        }
+        
+        try:
+            NewsArticle = apps.get_model('applications', 'NewsArticle')
+            models_status['NewsArticle'] = True
+            news_count = NewsArticle.objects.count()
+        except Exception as e:
+            news_count = f"Error: {str(e)}"
+        
+        try:
+            BlogPost = apps.get_model('applications', 'BlogPost')
+            models_status['BlogPost'] = True
+            blog_count = BlogPost.objects.count()
+        except Exception as e:
+            blog_count = f"Error: {str(e)}"
+        
+        try:
+            GalleryImage = apps.get_model('applications', 'GalleryImage')
+            models_status['GalleryImage'] = True
+            gallery_count = GalleryImage.objects.count()
+        except Exception as e:
+            gallery_count = f"Error: {str(e)}"
+        
+        return Response({
+            'success': True,
+            'models_registered': models_status,
+            'content_counts': {
+                'news': news_count,
+                'blog': blog_count,
+                'gallery': gallery_count,
+            },
+            'admin_url': 'https://southsudan-e-services.onrender.com/admin/',
+            'message': 'If models are registered but not showing in admin, try restarting the Render service.'
+        })
+    except Exception as e:
+        return Response({
+            'success': False,
+            'error': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
