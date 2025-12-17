@@ -21,7 +21,7 @@ interface NewsArticle {
 export default function NewsDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { t, language } = useTranslation();
+  const { language } = useTranslation();
   const [article, setArticle] = useState<NewsArticle | null>(null);
   const [loading, setLoading] = useState(true);
 

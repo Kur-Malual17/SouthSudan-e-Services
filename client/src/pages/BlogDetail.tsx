@@ -22,7 +22,7 @@ interface BlogPost {
 export default function BlogDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { t, language } = useTranslation();
+  const { language } = useTranslation();
   const [post, setPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
 
