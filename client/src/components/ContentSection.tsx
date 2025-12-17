@@ -53,9 +53,14 @@ export default function ContentSection() {
         api.get('/gallery/?featured=true'),
       ]);
       
-      setNews(newsRes.data.slice(0, 3)); // Show only 3 latest
-      setBlogs(blogsRes.data.slice(0, 3));
-      setGallery(galleryRes.data.slice(0, 6));
+      // Handle both paginated and non-paginated responses
+      const newsData = Array.isArray(newsRes.data) ? newsRes.data : (newsRes.data.results || []);
+      const blogsData = Array.isArray(blogsRes.data) ? blogsRes.data : (blogsRes.data.results || []);
+      const galleryData = Array.isArray(galleryRes.data) ? galleryRes.data : (galleryRes.data.results || []);
+      
+      setNews(newsData.slice(0, 3)); // Show only 3 latest
+      setBlogs(blogsData.slice(0, 3));
+      setGallery(galleryData.slice(0, 6));
     } catch (error) {
       console.error('Failed to fetch content:', error);
     } finally {

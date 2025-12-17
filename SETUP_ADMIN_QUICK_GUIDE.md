@@ -24,7 +24,7 @@ Find your backend URL:
 
 ### Step 3: You'll See This Response:
 ```json
-{
+{![alt text](image.png)
   "success": true,
   "message": "Default admin users created/updated successfully!",
   "results": [

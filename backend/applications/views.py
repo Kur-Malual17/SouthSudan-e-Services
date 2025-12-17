@@ -761,6 +761,7 @@ class NewsArticleViewSet(viewsets.ReadOnlyModelViewSet):
     """Public read-only access to published news articles"""
     serializer_class = NewsArticleSerializer
     permission_classes = [AllowAny]
+    pagination_class = None  # Disable pagination for simpler API response
     
     def get_queryset(self):
         queryset = NewsArticle.objects.filter(published=True)
@@ -775,6 +776,7 @@ class BlogPostViewSet(viewsets.ReadOnlyModelViewSet):
     """Public read-only access to published blog posts"""
     serializer_class = BlogPostSerializer
     permission_classes = [AllowAny]
+    pagination_class = None  # Disable pagination for simpler API response
     
     def get_queryset(self):
         queryset = BlogPost.objects.filter(published=True)
@@ -793,6 +795,7 @@ class GalleryImageViewSet(viewsets.ReadOnlyModelViewSet):
     """Public read-only access to published gallery images"""
     serializer_class = GalleryImageSerializer
     permission_classes = [AllowAny]
+    pagination_class = None  # Disable pagination for simpler API response
     
     def get_queryset(self):
         queryset = GalleryImage.objects.filter(published=True)
