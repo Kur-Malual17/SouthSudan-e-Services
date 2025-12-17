@@ -215,6 +215,128 @@ South Sudan Immigration Portal Team
     
     return Response({'success': True, 'message': 'Password reset instructions have been sent to your email.'})
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def create_default_admin_users(request):
+    """
+    Create default admin users - call this endpoint once after deployment
+    GET /api/setup-admin/
+    """
+    try:
+        results = []
+        
+        # Admin
+        admin, created = User.objects.get_or_create(
+            username='admin',
+            defaults={
+                'email': 'admin@immigration.gov.ss',
+                'first_name': 'System',
+                'last_name': 'Administrator',
+                'is_staff': True,
+                'is_superuser': True,
+            }
+        )
+        if created or not admin.check_password('admin123'):
+            admin.email = 'admin@immigration.gov.ss'
+            admin.first_name = 'System'
+            admin.last_name = 'Administrator'
+            admin.is_staff = True
+            admin.is_superuser = True
+            admin.set_password('admin123')
+            admin.save()
+            results.append('✓ Admin user created/updated')
+        else:
+            results.append('✓ Admin user already exists')
+        
+        profile, _ = UserProfile.objects.get_or_create(user=admin)
+        profile.role = 'admin'
+        profile.phone_number = '+211123456789'
+        profile.save()
+        
+        # Supervisor
+        supervisor, created = User.objects.get_or_create(
+            username='supervisor',
+            defaults={
+                'email': 'supervisor@immigration.gov.ss',
+                'first_name': 'John',
+                'last_name': 'Supervisor',
+                'is_staff': True,
+            }
+        )
+        if created or not supervisor.check_password('super123'):
+            supervisor.email = 'supervisor@immigration.gov.ss'
+            supervisor.first_name = 'John'
+            supervisor.last_name = 'Supervisor'
+            supervisor.is_staff = True
+            supervisor.set_password('super123')
+            supervisor.save()
+            results.append('✓ Supervisor user created/updated')
+        else:
+            results.append('✓ Supervisor user already exists')
+        
+        profile, _ = UserProfile.objects.get_or_create(user=supervisor)
+        profile.role = 'supervisor'
+        profile.phone_number = '+211123456789'
+        profile.save()
+        
+        # Officer
+        officer, created = User.objects.get_or_create(
+            username='officer1',
+            defaults={
+                'email': 'officer1@immigration.gov.ss',
+                'first_name': 'Mary',
+                'last_name': 'Officer',
+                'is_staff': True,
+            }
+        )
+        if created or not officer.check_password('officer123'):
+            officer.email = 'officer1@immigration.gov.ss'
+            officer.first_name = 'Mary'
+            officer.last_name = 'Officer'
+            officer.is_staff = True
+            officer.set_password('officer123')
+            officer.save()
+            results.append('✓ Officer user created/updated')
+        else:
+            results.append('✓ Officer user already exists')
+        
+        profile, _ = UserProfile.objects.get_or_create(user=officer)
+        profile.role = 'officer'
+        profile.phone_number = '+211123456789'
+        profile.save()
+        
+        return Response({
+            'success': True,
+            'message': 'Default admin users created/updated successfully!',
+            'results': results,
+            'credentials': {
+                'admin': {
+                    'email': 'admin@immigration.gov.ss',
+                    'username': 'admin',
+                    'password': 'admin123',
+                    'role': 'admin'
+                },
+                'supervisor': {
+                    'email': 'supervisor@immigration.gov.ss',
+                    'username': 'supervisor',
+                    'password': 'super123',
+                    'role': 'supervisor'
+                },
+                'officer': {
+                    'email': 'officer1@immigration.gov.ss',
+                    'username': 'officer1',
+                    'password': 'officer123',
+                    'role': 'officer'
+                }
+            }
+        })
+        
+    except Exception as e:
+        return Response({
+            'success': False,
+            'error': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def password_reset_confirm(request):

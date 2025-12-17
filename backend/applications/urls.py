@@ -17,6 +17,9 @@ urlpatterns = [
     path('auth/password-reset/', views.password_reset_request, name='password-reset'),
     path('auth/password-reset-confirm/', views.password_reset_confirm, name='password-reset-confirm'),
     
+    # Setup (for Render free tier - call once after deployment)
+    path('setup-admin/', views.create_default_admin_users, name='setup-admin'),
+    
     # Applications
     path('applications/submit/', views.submit_application, name='submit-application'),
     
