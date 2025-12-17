@@ -258,3 +258,74 @@ class Application(models.Model):
     
     def __str__(self):
         return f"{self.confirmation_number} - {self.get_application_type_display()}"
+
+
+class NewsArticle(models.Model):
+    """News articles for the homepage"""
+    title = models.CharField(max_length=200)
+    title_ar = models.CharField(max_length=200, blank=True, help_text="Arabic translation of title")
+    content = models.TextField()
+    content_ar = models.TextField(blank=True, help_text="Arabic translation of content")
+    excerpt = models.CharField(max_length=300, help_text="Short summary for preview")
+    excerpt_ar = models.CharField(max_length=300, blank=True, help_text="Arabic translation of excerpt")
+    image = models.ImageField(upload_to='news/', null=True, blank=True)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    published = models.BooleanField(default=True)
+    featured = models.BooleanField(default=False, help_text="Show in featured section")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'News Article'
+        verbose_name_plural = 'News Articles'
+    
+    def __str__(self):
+        return self.title
+
+
+class BlogPost(models.Model):
+    """Blog posts for the homepage"""
+    title = models.CharField(max_length=200)
+    title_ar = models.CharField(max_length=200, blank=True, help_text="Arabic translation of title")
+    content = models.TextField()
+    content_ar = models.TextField(blank=True, help_text="Arabic translation of content")
+    excerpt = models.CharField(max_length=300, help_text="Short summary for preview")
+    excerpt_ar = models.CharField(max_length=300, blank=True, help_text="Arabic translation of excerpt")
+    image = models.ImageField(upload_to='blog/', null=True, blank=True)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    category = models.CharField(max_length=100, blank=True, help_text="e.g., Tips, Updates, Guides")
+    published = models.BooleanField(default=True)
+    featured = models.BooleanField(default=False, help_text="Show in featured section")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Blog Post'
+        verbose_name_plural = 'Blog Posts'
+    
+    def __str__(self):
+        return self.title
+
+
+class GalleryImage(models.Model):
+    """Gallery images for the homepage"""
+    title = models.CharField(max_length=200)
+    title_ar = models.CharField(max_length=200, blank=True, help_text="Arabic translation of title")
+    description = models.TextField(blank=True)
+    description_ar = models.TextField(blank=True, help_text="Arabic translation of description")
+    image = models.ImageField(upload_to='gallery/')
+    category = models.CharField(max_length=100, blank=True, help_text="e.g., Events, Facilities, Staff")
+    published = models.BooleanField(default=True)
+    featured = models.BooleanField(default=False, help_text="Show in featured section")
+    uploaded_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Gallery Image'
+        verbose_name_plural = 'Gallery Images'
+    
+    def __str__(self):
+        return self.title

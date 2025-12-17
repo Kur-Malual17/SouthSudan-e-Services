@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { useTranslation } from '../hooks/useTranslation';
+import ContentSection from '../components/ContentSection';
 
 export default function Home() {
   const { user } = useAuthStore();
@@ -143,6 +144,9 @@ export default function Home() {
           );
         })()}
       </div>
+
+      {/* Dynamic Content Section (News, Blog, Gallery) */}
+      <ContentSection />
 
       {/* Benefits Section - Responsive */}
       <div className="bg-gradient-to-br from-blue-50 to-green-50 py-8 sm:py-12 md:py-16">

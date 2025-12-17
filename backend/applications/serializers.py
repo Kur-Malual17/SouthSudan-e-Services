@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from .models import UserProfile, Application
+from .models import UserProfile, Application, NewsArticle, BlogPost, GalleryImage
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -110,3 +110,34 @@ class ApplicationListSerializer(serializers.ModelSerializer):
         model = Application
         fields = ['id', 'confirmation_number', 'application_type', 'status', 'first_name', 
                  'last_name', 'email', 'phone_number', 'payment_status', 'created_at', 'user_details']
+
+
+class NewsArticleSerializer(serializers.ModelSerializer):
+    author_name = serializers.CharField(source='author.get_full_name', read_only=True)
+    
+    class Meta:
+        model = NewsArticle
+        fields = ['id', 'title', 'title_ar', 'content', 'content_ar', 'excerpt', 'excerpt_ar', 
+                 'image', 'author', 'author_name', 'published', 'featured', 'created_at', 'updated_at']
+        read_only_fields = ['author', 'created_at', 'updated_at']
+
+
+class BlogPostSerializer(serializers.ModelSerializer):
+    author_name = serializers.CharField(source='author.get_full_name', read_only=True)
+    
+    class Meta:
+        model = BlogPost
+        fields = ['id', 'title', 'title_ar', 'content', 'content_ar', 'excerpt', 'excerpt_ar', 
+                 'image', 'author', 'author_name', 'category', 'published', 'featured', 
+                 'created_at', 'updated_at']
+        read_only_fields = ['author', 'created_at', 'updated_at']
+
+
+class GalleryImageSerializer(serializers.ModelSerializer):
+    uploaded_by_name = serializers.CharField(source='uploaded_by.get_full_name', read_only=True)
+    
+    class Meta:
+        model = GalleryImage
+        fields = ['id', 'title', 'title_ar', 'description', 'description_ar', 'image', 
+                 'category', 'published', 'featured', 'uploaded_by', 'uploaded_by_name', 'created_at']
+        read_only_fields = ['uploaded_by', 'created_at']

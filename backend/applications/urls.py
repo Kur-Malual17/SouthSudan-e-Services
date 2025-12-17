@@ -4,6 +4,9 @@ from . import views
 
 router = DefaultRouter()
 router.register(r'applications', views.ApplicationViewSet, basename='application')
+router.register(r'news', views.NewsArticleViewSet, basename='news')
+router.register(r'blog', views.BlogPostViewSet, basename='blog')
+router.register(r'gallery', views.GalleryImageViewSet, basename='gallery')
 
 urlpatterns = [
     # CSRF Token

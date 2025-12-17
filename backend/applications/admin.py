@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import UserProfile, Application
+from .models import UserProfile, Application, NewsArticle, BlogPost, GalleryImage
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
@@ -76,3 +76,100 @@ class ApplicationAdmin(admin.ModelAdmin):
             'fields': ('created_at', 'updated_at')
         }),
     )
+
+
+
+@admin.register(NewsArticle)
+class NewsArticleAdmin(admin.ModelAdmin):
+    list_display = ['title', 'author', 'published', 'featured', 'created_at']
+    list_filter = ['published', 'featured', 'created_at']
+    search_fields = ['title', 'title_ar', 'content', 'content_ar']
+    readonly_fields = ['created_at', 'updated_at']
+    
+    fieldsets = (
+        ('English Content', {
+            'fields': ('title', 'excerpt', 'content', 'image')
+        }),
+        ('Arabic Translation', {
+            'fields': ('title_ar', 'excerpt_ar', 'content_ar'),
+            'classes': ('collapse',)
+        }),
+        ('Settings', {
+            'fields': ('author', 'published', 'featured')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def save_model(self, request, obj, form, change):
+        if not obj.author:
+            obj.author = request.user
+        super().save_model(request, obj, form, change)
+
+
+@admin.register(BlogPost)
+class BlogPostAdmin(admin.ModelAdmin):
+    list_display = ['title', 'category', 'author', 'published', 'featured', 'created_at']
+    list_filter = ['published', 'featured', 'category', 'created_at']
+    search_fields = ['title', 'title_ar', 'content', 'content_ar', 'category']
+    readonly_fields = ['created_at', 'updated_at']
+    
+    fieldsets = (
+        ('English Content', {
+            'fields': ('title', 'excerpt', 'content', 'image', 'category')
+        }),
+        ('Arabic Translation', {
+            'fields': ('title_ar', 'excerpt_ar', 'content_ar'),
+            'classes': ('collapse',)
+        }),
+        ('Settings', {
+            'fields': ('author', 'published', 'featured')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def save_model(self, request, obj, form, change):
+        if not obj.author:
+            obj.author = request.user
+        super().save_model(request, obj, form, change)
+
+
+@admin.register(GalleryImage)
+class GalleryImageAdmin(admin.ModelAdmin):
+    list_display = ['title', 'category', 'published', 'featured', 'image_preview', 'created_at']
+    list_filter = ['published', 'featured', 'category', 'created_at']
+    search_fields = ['title', 'title_ar', 'description', 'description_ar', 'category']
+    readonly_fields = ['created_at', 'image_preview']
+    
+    fieldsets = (
+        ('English Content', {
+            'fields': ('title', 'description', 'image', 'image_preview', 'category')
+        }),
+        ('Arabic Translation', {
+            'fields': ('title_ar', 'description_ar'),
+            'classes': ('collapse',)
+        }),
+        ('Settings', {
+            'fields': ('uploaded_by', 'published', 'featured')
+        }),
+        ('Timestamp', {
+            'fields': ('created_at',),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" style="max-height: 200px; max-width: 300px;" />', obj.image.url)
+        return "No image"
+    image_preview.short_description = 'Preview'
+    
+    def save_model(self, request, obj, form, change):
+        if not obj.uploaded_by:
+            obj.uploaded_by = request.user
+        super().save_model(request, obj, form, change)
