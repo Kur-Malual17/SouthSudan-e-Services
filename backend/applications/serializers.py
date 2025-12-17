@@ -130,8 +130,14 @@ class BlogPostSerializer(serializers.ModelSerializer):
 
 
 class GalleryImageSerializer(serializers.ModelSerializer):
+    author_name = serializers.SerializerMethodField()
+    
+    def get_author_name(self, obj):
+        """Safely get author_name field"""
+        return getattr(obj, 'author_name', '')
+    
     class Meta:
         model = GalleryImage
         fields = ['id', 'title', 'title_ar', 'description', 'description_ar', 'image', 
                  'category', 'author_name', 'published', 'featured', 'uploaded_by', 'created_at']
-        read_only_fields = ['uploaded_by', 'created_at']
+        read_only_fields = ['uploaded_by', 'created_at', 'author_name']
