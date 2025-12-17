@@ -76,6 +76,15 @@ export default function ContentSection() {
     return language === 'ar' && item.excerpt_ar ? item.excerpt_ar : item.excerpt;
   };
 
+  const getImageUrl = (imageUrl: string) => {
+    // If URL already starts with http/https (Cloudinary), use it as-is
+    if (imageUrl && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))) {
+      return imageUrl;
+    }
+    // Otherwise, prepend BACKEND_URL for local storage
+    return `${BACKEND_URL}${imageUrl}`;
+  };
+
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-16">
@@ -174,7 +183,7 @@ export default function ContentSection() {
                 {article.image && (
                   <div className="relative h-48 overflow-hidden">
                     <img
-                      src={`${BACKEND_URL}${article.image}`}
+                      src={getImageUrl(article.image)}
                       alt={getTitle(article)}
                       className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
                     />
@@ -223,7 +232,7 @@ export default function ContentSection() {
                 {post.image && (
                   <div className="relative h-48 overflow-hidden">
                     <img
-                      src={`${BACKEND_URL}${post.image}`}
+                      src={getImageUrl(post.image)}
                       alt={getTitle(post)}
                       className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
                     />
@@ -268,12 +277,12 @@ export default function ContentSection() {
             {gallery.map((image) => (
               <div
                 key={image.id}
-                onClick={() => window.open(`${BACKEND_URL}${image.image}`, '_blank')}
+                onClick={() => window.open(getImageUrl(image.image), '_blank')}
                 className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 group cursor-pointer transform hover:-translate-y-1"
               >
                 <div className="relative overflow-hidden h-56">
                   <img
-                    src={`${BACKEND_URL}${image.image}`}
+                    src={getImageUrl(image.image)}
                     alt={getTitle(image)}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />

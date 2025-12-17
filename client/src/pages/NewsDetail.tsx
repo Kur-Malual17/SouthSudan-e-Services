@@ -49,6 +49,13 @@ export default function NewsDetail() {
     return language === 'ar' && article?.content_ar ? article.content_ar : article?.content;
   };
 
+  const getImageUrl = (imageUrl: string) => {
+    if (imageUrl && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))) {
+      return imageUrl;
+    }
+    return `${BACKEND_URL}${imageUrl}`;
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -81,7 +88,7 @@ export default function NewsDetail() {
           {article.image && (
             <div className="relative h-96 overflow-hidden">
               <img
-                src={`${BACKEND_URL}${article.image}`}
+                src={getImageUrl(article.image)}
                 alt={getTitle()}
                 className="w-full h-full object-cover"
               />

@@ -50,6 +50,13 @@ export default function BlogDetail() {
     return language === 'ar' && post?.content_ar ? post.content_ar : post?.content;
   };
 
+  const getImageUrl = (imageUrl: string) => {
+    if (imageUrl && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))) {
+      return imageUrl;
+    }
+    return `${BACKEND_URL}${imageUrl}`;
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -82,7 +89,7 @@ export default function BlogDetail() {
           {post.image && (
             <div className="relative h-96 overflow-hidden">
               <img
-                src={`${BACKEND_URL}${post.image}`}
+                src={getImageUrl(post.image)}
                 alt={getTitle()}
                 className="w-full h-full object-cover"
               />
