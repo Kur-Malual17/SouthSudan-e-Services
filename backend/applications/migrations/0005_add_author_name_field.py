@@ -1,6 +1,7 @@
 # Generated manually for adding author_name field
 
 from django.db import migrations, models
+import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
@@ -28,16 +29,16 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='blogpost',
             name='author',
-            field=models.ForeignKey(blank=True, null=True, on_delete=models.deletion.SET_NULL, to='auth.user'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='auth.user'),
         ),
         migrations.AlterField(
             model_name='newsarticle',
             name='author',
-            field=models.ForeignKey(blank=True, null=True, on_delete=models.deletion.SET_NULL, to='auth.user'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='auth.user'),
         ),
         migrations.AlterField(
             model_name='galleryimage',
             name='uploaded_by',
-            field=models.ForeignKey(blank=True, null=True, on_delete=models.deletion.SET_NULL, to='auth.user'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='auth.user'),
         ),
     ]
