@@ -47,6 +47,7 @@ export default function ContentSection() {
 
   const fetchContent = async () => {
     try {
+      // First try to get featured content
       const [newsRes, blogsRes, galleryRes] = await Promise.all([
         api.get('/news/?featured=true'),
         api.get('/blog/?featured=true'),
@@ -54,9 +55,23 @@ export default function ContentSection() {
       ]);
       
       // Handle both paginated and non-paginated responses
-      const newsData = Array.isArray(newsRes.data) ? newsRes.data : (newsRes.data.results || []);
-      const blogsData = Array.isArray(blogsRes.data) ? blogsRes.data : (blogsRes.data.results || []);
-      const galleryData = Array.isArray(galleryRes.data) ? galleryRes.data : (galleryRes.data.results || []);
+      let newsData = Array.isArray(newsRes.data) ? newsRes.data : (newsRes.data.results || []);
+      let blogsData = Array.isArray(blogsRes.data) ? blogsRes.data : (blogsRes.data.results || []);
+      let galleryData = Array.isArray(galleryRes.data) ? galleryRes.data : (galleryRes.data.results || []);
+      
+      // If no featured content, fetch all published content
+      if (newsData.length === 0) {
+        const allNewsRes = await api.get('/news/');
+        newsData = Array.isArray(allNewsRes.data) ? allNewsRes.data : (allNewsRes.data.results || []);
+      }
+      if (blogsData.length === 0) {
+        const allBlogsRes = await api.get('/blog/');
+        blogsData = Array.isArray(allBlogsRes.data) ? allBlogsRes.data : (allBlogsRes.data.results || []);
+      }
+      if (galleryData.length === 0) {
+        const allGalleryRes = await api.get('/gallery/');
+        galleryData = Array.isArray(allGalleryRes.data) ? allGalleryRes.data : (allGalleryRes.data.results || []);
+      }
       
       setNews(newsData.slice(0, 3)); // Show only 3 latest
       setBlogs(blogsData.slice(0, 3));
