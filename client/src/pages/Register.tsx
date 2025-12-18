@@ -5,6 +5,15 @@ import toast from 'react-hot-toast';
 import api from '../lib/api';
 import { useAuthStore } from '../store/authStore';
 import { useTranslation } from '../hooks/useTranslation';
+import { 
+  validateEmail, 
+  validatePassword, 
+  validateName, 
+  validatePhoneNumber,
+  validatePasswordConfirmation,
+  capitalizeName,
+  getPasswordStrength
+} from '../utils/validation';
 
 interface RegisterForm {
   firstName: string;
@@ -19,12 +28,47 @@ export default function Register() {
   const navigate = useNavigate();
   const { setAuth } = useAuthStore();
   const [loading, setLoading] = useState(false);
-  const { register, handleSubmit, formState: { errors } } = useForm<RegisterForm>();
+  const [passwordStrength, setPasswordStrength] = useState<'weak' | 'medium' | 'strong'>('weak');
+  const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm<RegisterForm>();
   const { t } = useTranslation();
+  
+  const password = watch('password');
 
   const onSubmit = async (data: RegisterForm) => {
-    if (data.password !== data.confirmPassword) {
-      toast.error('Passwords do not match');
+    // Validate all fields
+    const emailValidation = validateEmail(data.email);
+    if (!emailValidation.isValid) {
+      toast.error(emailValidation.error!);
+      return;
+    }
+
+    const passwordValidation = validatePassword(data.password);
+    if (!passwordValidation.isValid) {
+      toast.error(passwordValidation.error!);
+      return;
+    }
+
+    const confirmValidation = validatePasswordConfirmation(data.password, data.confirmPassword);
+    if (!confirmValidation.isValid) {
+      toast.error(confirmValidation.error!);
+      return;
+    }
+
+    const firstNameValidation = validateName(data.firstName, 'First name');
+    if (!firstNameValidation.isValid) {
+      toast.error(firstNameValidation.error!);
+      return;
+    }
+
+    const lastNameValidation = validateName(data.lastName, 'Last name');
+    if (!lastNameValidation.isValid) {
+      toast.error(lastNameValidation.error!);
+      return;
+    }
+
+    const phoneValidation = validatePhoneNumber(data.phoneNumber);
+    if (!phoneValidation.isValid) {
+      toast.error(phoneValidation.error!);
       return;
     }
 
@@ -96,58 +140,150 @@ export default function Register() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1 text-gray-700">First Name</label>
+              <label className="block text-sm font-medium mb-1 text-gray-700">
+                First Name <span className="text-red-500">*</span>
+              </label>
               <input
-                {...register('firstName', { required: 'First name is required' })}
+                {...register('firstName', { 
+                  required: 'First name is required',
+                  validate: (value) => {
+                    const result = validateName(value, 'First name');
+                    return result.isValid || result.error!;
+                  }
+                })}
+                onBlur={(e) => {
+                  const capitalized = capitalizeName(e.target.value);
+                  setValue('firstName', capitalized);
+                }}
+                placeholder="John"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               />
               {errors.firstName && <p className="text-danger text-sm mt-1">{errors.firstName.message}</p>}
+              <p className="text-xs text-gray-500 mt-1">Only letters, must start with capital</p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1 text-gray-700">Last Name</label>
+              <label className="block text-sm font-medium mb-1 text-gray-700">
+                Last Name <span className="text-red-500">*</span>
+              </label>
               <input
-                {...register('lastName', { required: 'Last name is required' })}
+                {...register('lastName', { 
+                  required: 'Last name is required',
+                  validate: (value) => {
+                    const result = validateName(value, 'Last name');
+                    return result.isValid || result.error!;
+                  }
+                })}
+                onBlur={(e) => {
+                  const capitalized = capitalizeName(e.target.value);
+                  setValue('lastName', capitalized);
+                }}
+                placeholder="Doe"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               />
               {errors.lastName && <p className="text-danger text-sm mt-1">{errors.lastName.message}</p>}
+              <p className="text-xs text-gray-500 mt-1">Only letters, must start with capital</p>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">Email</label>
+            <label className="block text-sm font-medium mb-1 text-gray-700">
+              Email <span className="text-red-500">*</span>
+            </label>
             <input
               type="email"
-              {...register('email', { required: 'Email is required' })}
+              {...register('email', { 
+                required: 'Email is required',
+                validate: (value) => {
+                  const result = validateEmail(value);
+                  return result.isValid || result.error!;
+                }
+              })}
+              placeholder="john.doe@example.com"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             />
             {errors.email && <p className="text-danger text-sm mt-1">{errors.email.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">Phone Number</label>
+            <label className="block text-sm font-medium mb-1 text-gray-700">
+              Phone Number <span className="text-red-500">*</span>
+            </label>
             <input
-              {...register('phoneNumber', { required: 'Phone number is required' })}
+              {...register('phoneNumber', { 
+                required: 'Phone number is required',
+                validate: (value) => {
+                  const result = validatePhoneNumber(value);
+                  return result.isValid || result.error!;
+                }
+              })}
+              placeholder="+211 XXX XXX XXX"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             />
             {errors.phoneNumber && <p className="text-danger text-sm mt-1">{errors.phoneNumber.message}</p>}
+            <p className="text-xs text-gray-500 mt-1">10-15 digits, can include country code</p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">Password</label>
+            <label className="block text-sm font-medium mb-1 text-gray-700">
+              Password <span className="text-red-500">*</span>
+            </label>
             <input
               type="password"
-              {...register('password', { required: 'Password is required', minLength: { value: 6, message: 'Minimum 6 characters' } })}
+              {...register('password', { 
+                required: 'Password is required',
+                validate: (value) => {
+                  const result = validatePassword(value);
+                  setPasswordStrength(getPasswordStrength(value));
+                  return result.isValid || result.error!;
+                }
+              })}
+              onChange={(e) => setPasswordStrength(getPasswordStrength(e.target.value))}
+              placeholder="Enter strong password"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             />
             {errors.password && <p className="text-danger text-sm mt-1">{errors.password.message}</p>}
+            {password && (
+              <div className="mt-2">
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full transition-all ${
+                        passwordStrength === 'weak' ? 'w-1/3 bg-red-500' :
+                        passwordStrength === 'medium' ? 'w-2/3 bg-yellow-500' :
+                        'w-full bg-green-500'
+                      }`}
+                    />
+                  </div>
+                  <span className={`text-xs font-medium ${
+                    passwordStrength === 'weak' ? 'text-red-500' :
+                    passwordStrength === 'medium' ? 'text-yellow-500' :
+                    'text-green-500'
+                  }`}>
+                    {passwordStrength.charAt(0).toUpperCase() + passwordStrength.slice(1)}
+                  </span>
+                </div>
+              </div>
+            )}
+            <p className="text-xs text-gray-500 mt-1">
+              Min 6 chars, uppercase, lowercase, digit, special char
+            </p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">Confirm Password</label>
+            <label className="block text-sm font-medium mb-1 text-gray-700">
+              Confirm Password <span className="text-red-500">*</span>
+            </label>
             <input
               type="password"
-              {...register('confirmPassword', { required: 'Please confirm password' })}
+              {...register('confirmPassword', { 
+                required: 'Please confirm password',
+                validate: (value) => {
+                  const result = validatePasswordConfirmation(password, value);
+                  return result.isValid || result.error!;
+                }
+              })}
+              placeholder="Re-enter password"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             />
             {errors.confirmPassword && <p className="text-danger text-sm mt-1">{errors.confirmPassword.message}</p>}

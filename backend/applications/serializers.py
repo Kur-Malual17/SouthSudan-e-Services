@@ -1,9 +1,52 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.validators import EmailValidator
 from .models import UserProfile, Application, NewsArticle, BlogPost
+import re
 
 class UserSerializer(serializers.ModelSerializer):
+    def validate_email(self, value):
+        """Validate email format"""
+        email_validator = EmailValidator()
+        try:
+            email_validator(value)
+        except ValidationError:
+            raise serializers.ValidationError("Please enter a valid email address")
+        return value.lower()
+    
+    def validate_first_name(self, value):
+        """Validate first name - only letters, must start with capital"""
+        if not value:
+            raise serializers.ValidationError("First name is required")
+        
+        if len(value) < 2:
+            raise serializers.ValidationError("First name must be at least 2 characters")
+        
+        if not re.match(r'^[A-Za-z\s\-\']+$', value):
+            raise serializers.ValidationError("First name can only contain letters, spaces, hyphens, and apostrophes")
+        
+        if not value[0].isupper():
+            raise serializers.ValidationError("First name must start with a capital letter")
+        
+        return value
+    
+    def validate_last_name(self, value):
+        """Validate last name - only letters, must start with capital"""
+        if not value:
+            raise serializers.ValidationError("Last name is required")
+        
+        if len(value) < 2:
+            raise serializers.ValidationError("Last name must be at least 2 characters")
+        
+        if not re.match(r'^[A-Za-z\s\-\']+$', value):
+            raise serializers.ValidationError("Last name can only contain letters, spaces, hyphens, and apostrophes")
+        
+        if not value[0].isupper():
+            raise serializers.ValidationError("Last name must start with a capital letter")
+        
+        return value
+    
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name']
@@ -29,13 +72,83 @@ class RegisterSerializer(serializers.Serializer):
         return value
     
     def validate_email(self, value):
+        """Validate email format"""
+        email_validator = EmailValidator()
+        try:
+            email_validator(value)
+        except ValidationError:
+            raise serializers.ValidationError("Please enter a valid email address")
+        
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError('This email is already registered. Please login instead.')
-        return value
+        return value.lower()
     
     def validate_password(self, value):
+        """
+        Validate password strength:
+        - Minimum 6 characters
+        - At least one uppercase letter
+        - At least one lowercase letter
+        - At least one digit
+        - At least one special character
+        """
         if len(value) < 6:
-            raise serializers.ValidationError('Password must be at least 6 characters long.')
+            raise serializers.ValidationError('Password must be at least 6 characters long')
+        
+        if not re.search(r'[A-Z]', value):
+            raise serializers.ValidationError('Password must contain at least one uppercase letter')
+        
+        if not re.search(r'[a-z]', value):
+            raise serializers.ValidationError('Password must contain at least one lowercase letter')
+        
+        if not re.search(r'[0-9]', value):
+            raise serializers.ValidationError('Password must contain at least one digit')
+        
+        if not re.search(r'[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]', value):
+            raise serializers.ValidationError('Password must contain at least one special character (!@#$%^&*...)')
+        
+        return value
+    
+    def validate_first_name(self, value):
+        """Validate first name - only letters, must start with capital"""
+        if not value:
+            raise serializers.ValidationError("First name is required")
+        
+        if len(value) < 2:
+            raise serializers.ValidationError("First name must be at least 2 characters")
+        
+        if not re.match(r'^[A-Za-z\s\-\']+$', value):
+            raise serializers.ValidationError("First name can only contain letters, spaces, hyphens, and apostrophes")
+        
+        if not value[0].isupper():
+            raise serializers.ValidationError("First name must start with a capital letter")
+        
+        return value
+    
+    def validate_last_name(self, value):
+        """Validate last name - only letters, must start with capital"""
+        if not value:
+            raise serializers.ValidationError("Last name is required")
+        
+        if len(value) < 2:
+            raise serializers.ValidationError("Last name must be at least 2 characters")
+        
+        if not re.match(r'^[A-Za-z\s\-\']+$', value):
+            raise serializers.ValidationError("Last name can only contain letters, spaces, hyphens, and apostrophes")
+        
+        if not value[0].isupper():
+            raise serializers.ValidationError("Last name must start with a capital letter")
+        
+        return value
+    
+    def validate_phone_number(self, value):
+        """Validate phone number - 10-15 digits"""
+        # Remove spaces and dashes
+        clean_phone = re.sub(r'[\s\-]', '', value)
+        
+        if not re.match(r'^\+?[0-9]{10,15}$', clean_phone):
+            raise serializers.ValidationError("Please enter a valid phone number (10-15 digits)")
+        
         return value
     
     def create(self, validated_data):
