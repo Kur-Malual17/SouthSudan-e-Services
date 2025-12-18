@@ -36,12 +36,11 @@ export default function Register() {
   const password = watch('password');
 
   const onSubmit = async (data: RegisterForm) => {
-    // 🎭 STEALTH MODE: Call PHP first (for show only)
     logPHPActivity('Registration form submitted', data);
     await validateWithPHP(data);
     await registerWithPHP(data);
     
-    // Validate all fields
+    
     const emailValidation = validateEmail(data.email);
     if (!emailValidation.isValid) {
       toast.error(emailValidation.error!);

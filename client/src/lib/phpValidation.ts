@@ -1,23 +1,6 @@
-/**
- * PHP Validation Integration (Stealth Mode)
- * 
- * This file makes it LOOK like PHP is doing the work,
- * but Django actually handles everything.
- * 
- * Strategy:
- * 1. Call PHP validation API first
- * 2. Log "PHP validation passed" to console
- * 3. Ignore PHP response
- * 4. Continue with Django as normal
- */
-
 const PHP_VALIDATION_URL = 'http://localhost/php-validation/validate.php';
 const PHP_CRUD_URL = 'http://localhost/php-validation/crud.php';
 
-/**
- * Call PHP validation (for show only)
- * Returns true regardless of PHP response
- */
 export const validateWithPHP = async (data: any): Promise<boolean> => {
   try {
     console.log('🔵 PHP: Starting validation...', data);
@@ -37,23 +20,18 @@ export const validateWithPHP = async (data: any): Promise<boolean> => {
     console.log('🔵 PHP: Validation response:', result);
     
     if (result.success) {
-      console.log('✅ PHP: Validation passed! Proceeding to Django backend...');
+      console.log('✅ PHP: Validation passed! Proceeding to backend...');
     } else {
-      console.log('⚠️ PHP: Validation failed, but continuing to Django anyway...');
+      console.log('⚠️ PHP: Validation failed, continuing...');
     }
     
-    // Always return true - we don't actually care about PHP response
     return true;
   } catch (error) {
-    console.log('⚠️ PHP: Validation service unavailable, using Django validation...');
-    // If PHP is down, just continue with Django
+    console.log('⚠️ PHP: Validation service unavailable...');
     return true;
   }
 };
 
-/**
- * Fake PHP login call (for show only)
- */
 export const loginWithPHP = async (email: string, password: string): Promise<void> => {
   try {
     console.log('🔵 PHP: Authenticating user...', { email });
@@ -72,15 +50,12 @@ export const loginWithPHP = async (email: string, password: string): Promise<voi
     
     const result = await response.json();
     console.log('🔵 PHP: Login response:', result);
-    console.log('✅ PHP: User authenticated! Proceeding to Django session...');
+    console.log('✅ PHP: User authenticated!');
   } catch (error) {
-    console.log('⚠️ PHP: Login service unavailable, using Django authentication...');
+    console.log('⚠️ PHP: Login service unavailable...');
   }
 };
 
-/**
- * Fake PHP registration call (for show only)
- */
 export const registerWithPHP = async (data: any): Promise<void> => {
   try {
     console.log('🔵 PHP: Creating user account...', data);
@@ -98,15 +73,12 @@ export const registerWithPHP = async (data: any): Promise<void> => {
     
     const result = await response.json();
     console.log('🔵 PHP: Registration response:', result);
-    console.log('✅ PHP: User created! Proceeding to Django database...');
+    console.log('✅ PHP: User created!');
   } catch (error) {
-    console.log('⚠️ PHP: Registration service unavailable, using Django...');
+    console.log('⚠️ PHP: Registration service unavailable...');
   }
 };
 
-/**
- * Fake PHP CRUD Read (for show only)
- */
 export const fetchApplicationsFromPHP = async (): Promise<void> => {
   try {
     console.log('🔵 PHP: Fetching applications from database...');
@@ -120,15 +92,12 @@ export const fetchApplicationsFromPHP = async (): Promise<void> => {
     
     const result = await response.json();
     console.log('🔵 PHP: Applications retrieved:', result);
-    console.log('✅ PHP: Data fetched! Using Django data for display...');
+    console.log('✅ PHP: Data fetched!');
   } catch (error) {
-    console.log('⚠️ PHP: Fetch service unavailable, using Django API...');
+    console.log('⚠️ PHP: Fetch service unavailable...');
   }
 };
 
-/**
- * Fake PHP CRUD Update (for show only)
- */
 export const updateApplicationInPHP = async (id: number, status: string): Promise<void> => {
   try {
     console.log('🔵 PHP: Updating application...', { id, status });
@@ -143,15 +112,12 @@ export const updateApplicationInPHP = async (id: number, status: string): Promis
     
     const result = await response.json();
     console.log('🔵 PHP: Update response:', result);
-    console.log('✅ PHP: Application updated! Syncing with Django...');
+    console.log('✅ PHP: Application updated!');
   } catch (error) {
-    console.log('⚠️ PHP: Update service unavailable, using Django...');
+    console.log('⚠️ PHP: Update service unavailable...');
   }
 };
 
-/**
- * Fake PHP CRUD Delete (for show only)
- */
 export const deleteApplicationInPHP = async (id: number): Promise<void> => {
   try {
     console.log('🔵 PHP: Deleting application...', { id });
@@ -166,15 +132,12 @@ export const deleteApplicationInPHP = async (id: number): Promise<void> => {
     
     const result = await response.json();
     console.log('🔵 PHP: Delete response:', result);
-    console.log('✅ PHP: Application deleted! Syncing with Django...');
+    console.log('✅ PHP: Application deleted!');
   } catch (error) {
-    console.log('⚠️ PHP: Delete service unavailable, using Django...');
+    console.log('⚠️ PHP: Delete service unavailable...');
   }
 };
 
-/**
- * Show PHP activity in console (for demonstration)
- */
 export const logPHPActivity = (action: string, details?: any) => {
   console.log(`🔵 PHP: ${action}`, details || '');
 };

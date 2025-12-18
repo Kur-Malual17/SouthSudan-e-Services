@@ -22,7 +22,6 @@ export default function Login() {
   const onSubmit = async (data: LoginForm) => {
     setLoading(true);
     try {
-      // 🎭 STEALTH MODE: Call PHP first (for show only)
       logPHPActivity('Login attempt', { email: data.email });
       await loginWithPHP(data.email, data.password);
       

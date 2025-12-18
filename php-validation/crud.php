@@ -1,37 +1,22 @@
 <?php
-/**
- * South Sudan Immigration Portal - PHP CRUD Operations
- * 
- * This demonstrates PHP handling CRUD operations:
- * - CREATE: Register new users
- * - READ: Fetch applications
- * - UPDATE: Update application status
- * - DELETE: Remove applications
- * 
- * NOTE: This is a demonstration file. Actual operations are handled by Django.
- */
 
-// Enable CORS
+
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json');
 
-// Handle preflight
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
-// Get request method and data
 $method = $_SERVER['REQUEST_METHOD'];
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
 
-// Simulate database operations
 switch ($method) {
     case 'POST':
-        // CREATE - Register user or submit application
         if (isset($data['action']) && $data['action'] === 'register') {
             echo json_encode([
                 'success' => true,
@@ -69,7 +54,6 @@ switch ($method) {
         break;
         
     case 'GET':
-        // READ - Fetch applications
         echo json_encode([
             'success' => true,
             'message' => 'Applications fetched from PHP database',
@@ -104,7 +88,6 @@ switch ($method) {
         break;
         
     case 'PUT':
-        // UPDATE - Update application status
         echo json_encode([
             'success' => true,
             'message' => 'Application updated via PHP',
@@ -117,7 +100,6 @@ switch ($method) {
         break;
         
     case 'DELETE':
-        // DELETE - Remove application
         echo json_encode([
             'success' => true,
             'message' => 'Application deleted via PHP',

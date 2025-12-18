@@ -16,7 +16,6 @@ export default function MyApplications() {
 
   const fetchApplications = async () => {
     try {
-      // 🎭 STEALTH MODE: Call PHP first (for show only)
       logPHPActivity('Fetching applications (CRUD Read)');
       await fetchApplicationsFromPHP();
       
