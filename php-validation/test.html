@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHP Validation API Test - South Sudan Immigration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .test-section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #5568d3;
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            display: block;
+        }
+        
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            display: block;
+        }
+        
+        .result pre {
+            margin-top: 10px;
+            background: rgba(0,0,0,0.05);
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        
+        .strength-indicator {
+            height: 8px;
+            background: #ddd;
+            border-radius: 4px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .strength-bar {
+            height: 100%;
+            transition: width 0.3s, background 0.3s;
+        }
+        
+        .strength-weak { width: 33%; background: #dc3545; }
+        .strength-medium { width: 66%; background: #ffc107; }
+        .strength-strong { width: 100%; background: #28a745; }
+        
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .info-box h3 {
+            color: #2196F3;
+            margin-bottom: 10px;
+        }
+        
+        .info-box ul {
+            margin-left: 20px;
+        }
+        
+        .info-box li {
+            margin-bottom: 5px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🇸🇸 PHP Validation API Test</h1>
+        <p class="subtitle">South Sudan Immigration Portal - Validation Testing Interface</p>
+        
+        <div class="info-box">
+            <h3>📋 Validation Requirements</h3>
+            <ul>
+                <li><strong>Password:</strong> Min 6 chars, uppercase, lowercase, digit, special char</li>
+                <li><strong>Name:</strong> Only letters, must start with capital letter</li>
+                <li><strong>Email:</strong> Valid email format</li>
+                <li><strong>Phone:</strong> 10-15 digits, can include country code</li>
+            </ul>
+        </div>
+        
+        <!-- Single Field Validation -->
+        <div class="test-section">
+            <h2>1. Single Field Validation</h2>
+            <div class="form-group">
+                <label>Validation Type:</label>
+                <select id="validationType">
+                    <option value="email">Email</option>
+                    <option value="password">Password</option>
+                    <option value="name">Name</option>
+                    <option value="phone">Phone</option>
+                    <option value="username">Username</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Value to Validate:</label>
+                <input type="text" id="singleValue" placeholder="Enter value...">
+                <div class="strength-indicator" id="strengthIndicator" style="display:none;">
+                    <div class="strength-bar" id="strengthBar"></div>
+                </div>
+            </div>
+            <button onclick="validateSingle()">Validate</button>
+            <div class="result" id="singleResult"></div>
+        </div>
+        
+        <!-- Full Registration Validation -->
+        <div class="test-section">
+            <h2>2. Full Registration Form Validation</h2>
+            <div class="form-group">
+                <label>First Name:</label>
+                <input type="text" id="firstName" placeholder="John">
+            </div>
+            <div class="form-group">
+                <label>Last Name:</label>
+                <input type="text" id="lastName" placeholder="Doe">
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" id="email" placeholder="john.doe@example.com">
+            </div>
+            <div class="form-group">
+                <label>Phone Number:</label>
+                <input type="tel" id="phoneNumber" placeholder="+211 XXX XXX XXX">
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" id="password" placeholder="MyPass123!">
+            </div>
+            <div class="form-group">
+                <label>Confirm Password:</label>
+                <input type="password" id="confirmPassword" placeholder="MyPass123!">
+            </div>
+            <button onclick="validateRegistration()">Validate All Fields</button>
+            <div class="result" id="registrationResult"></div>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = 'http://localhost/php-validation/validate.php';
+        
+        // Update validation type
+        document.getElementById('validationType').addEventListener('change', function() {
+            const type = this.value;
+            const input = document.getElementById('singleValue');
+            const strengthIndicator = document.getElementById('strengthIndicator');
+            
+            if (type === 'password') {
+                input.type = 'password';
+                strengthIndicator.style.display = 'block';
+            } else {
+                input.type = 'text';
+                strengthIndicator.style.display = 'none';
+            }
+            
+            // Update placeholder
+            const placeholders = {
+                email: 'user@example.com',
+                password: 'MyPass123!',
+                name: 'John',
+                phone: '+211123456789',
+                username: 'johndoe123'
+            };
+            input.placeholder = placeholders[type];
+        });
+        
+        // Validate single field
+        async function validateSingle() {
+            const type = document.getElementById('validationType').value;
+            const value = document.getElementById('singleValue').value;
+            const resultDiv = document.getElementById('singleResult');
+            
+            if (!value) {
+                showResult(resultDiv, false, 'Please enter a value to validate');
+                return;
+            }
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: type,
+                        value: value,
+                        fieldName: type === 'name' ? 'Name' : undefined
+                    })
+                });
+                
+                const result = await response.json();
+                
+                // Update strength indicator for password
+                if (type === 'password' && result.data && result.data.strength) {
+                    updateStrengthIndicator(result.data.strength);
+                }
+                
+                showResult(resultDiv, result.success, result.success ? 'Validation passed!' : Object.values(result.errors)[0], result);
+            } catch (error) {
+                showResult(resultDiv, false, 'Error connecting to validation API: ' + error.message);
+            }
+        }
+        
+        // Validate full registration
+        async function validateRegistration() {
+            const data = {
+                type: 'registration',
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                phoneNumber: document.getElementById('phoneNumber').value,
+                password: document.getElementById('password').value,
+                confirmPassword: document.getElementById('confirmPassword').value
+            };
+            
+            const resultDiv = document.getElementById('registrationResult');
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showResult(resultDiv, true, '✅ All validations passed! Ready to submit to Django backend.', result);
+                } else {
+                    const errorMessages = Object.entries(result.errors)
+                        .map(([field, error]) => `<strong>${field}:</strong> ${error}`)
+                        .join('<br>');
+                    showResult(resultDiv, false, errorMessages, result);
+                }
+            } catch (error) {
+                showResult(resultDiv, false, 'Error connecting to validation API: ' + error.message);
+            }
+        }
+        
+        // Show result
+        function showResult(div, success, message, fullResult = null) {
+            div.className = 'result ' + (success ? 'success' : 'error');
+            div.innerHTML = message;
+            
+            if (fullResult) {
+                div.innerHTML += '<pre>' + JSON.stringify(fullResult, null, 2) + '</pre>';
+            }
+        }
+        
+        // Update strength indicator
+        function updateStrengthIndicator(strength) {
+            const bar = document.getElementById('strengthBar');
+            bar.className = 'strength-bar strength-' + strength;
+        }
+        
+        // Real-time password strength
+        document.getElementById('singleValue').addEventListener('input', function() {
+            const type = document.getElementById('validationType').value;
+            if (type === 'password' && this.value) {
+                // Simple client-side strength check
+                let score = 0;
+                if (this.value.length >= 6) score++;
+                if (this.value.length >= 10) score++;
+                if (/[a-z]/.test(this.value)) score++;
+                if (/[A-Z]/.test(this.value)) score++;
+                if (/[0-9]/.test(this.value)) score++;
+                if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(this.value)) score++;
+                
+                const strength = score <= 2 ? 'weak' : score <= 4 ? 'medium' : 'strong';
+                updateStrengthIndicator(strength);
+            }
+        });
+    </script>
+</body>
+</html>

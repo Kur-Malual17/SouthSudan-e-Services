@@ -311,24 +311,4 @@ class BlogPost(models.Model):
         return self.title
 
 
-class GalleryImage(models.Model):
-    """Gallery images for the homepage"""
-    title = models.CharField(max_length=200)
-    title_ar = models.CharField(max_length=200, blank=True, help_text="Arabic translation of title")
-    description = models.TextField(blank=True)
-    description_ar = models.TextField(blank=True, help_text="Arabic translation of description")
-    image = models.ImageField(upload_to='gallery/')
-    category = models.CharField(max_length=100, blank=True, help_text="e.g., Events, Facilities, Staff")
-    author_name = models.CharField(max_length=200, blank=True, default='', help_text="Photographer or source (e.g., 'Immigration Department')")
-    published = models.BooleanField(default=True)
-    featured = models.BooleanField(default=False, help_text="Show in featured section")
-    uploaded_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        ordering = ['-created_at']
-        verbose_name = 'Gallery Image'
-        verbose_name_plural = 'Gallery Images'
-    
-    def __str__(self):
-        return self.title
+
