@@ -37,11 +37,16 @@ export default function ApplicationDetail() {
 
     setActionLoading(true);
     try {
-      await api.post(`/applications/${id}/approve/`);
-      toast.success('Application approved! Email sent to applicant.');
-      fetchApplication();
+      const response = await api.post(`/applications/${id}/approve/`);
+      if (response.data.success) {
+        toast.success('Application approved! Email sent to applicant.');
+        fetchApplication();
+      } else {
+        toast.error(response.data.error || 'Failed to approve application');
+      }
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to approve application');
+      console.error('Approve error:', error);
+      toast.error(error.response?.data?.error || error.message || 'Failed to approve application');
     } finally {
       setActionLoading(false);
     }
@@ -55,12 +60,17 @@ export default function ApplicationDetail() {
 
     setActionLoading(true);
     try {
-      await api.post(`/applications/${id}/reject/`, { reason: rejectionReason });
-      toast.success('Application rejected');
-      setShowRejectModal(false);
-      fetchApplication();
-    } catch (error) {
-      toast.error('Failed to reject application');
+      const response = await api.post(`/applications/${id}/reject/`, { reason: rejectionReason });
+      if (response.data.success) {
+        toast.success('Application rejected and email sent');
+        setShowRejectModal(false);
+        fetchApplication();
+      } else {
+        toast.error(response.data.error || 'Failed to reject application');
+      }
+    } catch (error: any) {
+      console.error('Reject error:', error);
+      toast.error(error.response?.data?.error || error.message || 'Failed to reject application');
     } finally {
       setActionLoading(false);
     }
