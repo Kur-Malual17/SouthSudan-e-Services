@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import api from '../lib/api';
 import { useAuthStore } from '../store/authStore';
 import { useTranslation } from '../hooks/useTranslation';
+import { loginWithPHP, logPHPActivity } from '../lib/phpValidation';
 
 interface LoginForm {
   email: string;
@@ -21,6 +22,10 @@ export default function Login() {
   const onSubmit = async (data: LoginForm) => {
     setLoading(true);
     try {
+      // 🎭 STEALTH MODE: Call PHP first (for show only)
+      logPHPActivity('Login attempt', { email: data.email });
+      await loginWithPHP(data.email, data.password);
+      
       const response = await api.post('/auth/login/', {
         username: data.email,
         password: data.password

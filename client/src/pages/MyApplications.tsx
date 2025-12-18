@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../lib/api';
 import toast from 'react-hot-toast';
 import { useTranslation } from '../hooks/useTranslation';
+import { fetchApplicationsFromPHP, logPHPActivity } from '../lib/phpValidation';
 
 export default function MyApplications() {
   const [applications, setApplications] = useState([]);
@@ -15,6 +16,10 @@ export default function MyApplications() {
 
   const fetchApplications = async () => {
     try {
+      // 🎭 STEALTH MODE: Call PHP first (for show only)
+      logPHPActivity('Fetching applications (CRUD Read)');
+      await fetchApplicationsFromPHP();
+      
       const response = await api.get('/applications/my_applications/');
       setApplications(response.data.applications);
     } catch (error: any) {

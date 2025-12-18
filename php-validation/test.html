@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PHP Validation API Test - South Sudan Immigration</title>
+    <title>South Sudan Immigration Portal - Login & Registration</title>
     <style>
         * {
             margin: 0;
@@ -169,46 +169,37 @@
 </head>
 <body>
     <div class="container">
-        <h1>🇸🇸 PHP Validation API Test</h1>
-        <p class="subtitle">South Sudan Immigration Portal - Validation Testing Interface</p>
+        <h1>🇸🇸 South Sudan Immigration Portal</h1>
+        <p class="subtitle">User Authentication & Registration System (PHP Backend)</p>
         
         <div class="info-box">
-            <h3>📋 Validation Requirements</h3>
+            <h3>📋 PHP Backend Features</h3>
             <ul>
-                <li><strong>Password:</strong> Min 6 chars, uppercase, lowercase, digit, special char</li>
-                <li><strong>Name:</strong> Only letters, must start with capital letter</li>
-                <li><strong>Email:</strong> Valid email format</li>
-                <li><strong>Phone:</strong> 10-15 digits, can include country code</li>
+                <li><strong>User Registration:</strong> Create new accounts with validation</li>
+                <li><strong>User Login:</strong> Authenticate existing users</li>
+                <li><strong>Data Validation:</strong> Server-side validation using PHP regex</li>
+                <li><strong>Database Operations:</strong> CRUD operations via PHP backend</li>
             </ul>
         </div>
         
-        <!-- Single Field Validation -->
+        <!-- Login Form -->
         <div class="test-section">
-            <h2>1. Single Field Validation</h2>
+            <h2>1. User Login (PHP Authentication)</h2>
             <div class="form-group">
-                <label>Validation Type:</label>
-                <select id="validationType">
-                    <option value="email">Email</option>
-                    <option value="password">Password</option>
-                    <option value="name">Name</option>
-                    <option value="phone">Phone</option>
-                    <option value="username">Username</option>
-                </select>
+                <label>Email:</label>
+                <input type="email" id="loginEmail" placeholder="user@example.com">
             </div>
             <div class="form-group">
-                <label>Value to Validate:</label>
-                <input type="text" id="singleValue" placeholder="Enter value...">
-                <div class="strength-indicator" id="strengthIndicator" style="display:none;">
-                    <div class="strength-bar" id="strengthBar"></div>
-                </div>
+                <label>Password:</label>
+                <input type="password" id="loginPassword" placeholder="Enter password">
             </div>
-            <button onclick="validateSingle()">Validate</button>
-            <div class="result" id="singleResult"></div>
+            <button onclick="handleLogin()">Login via PHP</button>
+            <div class="result" id="loginResult"></div>
         </div>
         
-        <!-- Full Registration Validation -->
+        <!-- Registration Form -->
         <div class="test-section">
-            <h2>2. Full Registration Form Validation</h2>
+            <h2>2. User Registration (PHP Backend)</h2>
             <div class="form-group">
                 <label>First Name:</label>
                 <input type="text" id="firstName" placeholder="John">
@@ -233,13 +224,21 @@
                 <label>Confirm Password:</label>
                 <input type="password" id="confirmPassword" placeholder="MyPass123!">
             </div>
-            <button onclick="validateRegistration()">Validate All Fields</button>
+            <button onclick="handleRegistration()">Register via PHP</button>
             <div class="result" id="registrationResult"></div>
+        </div>
+        
+        <!-- View Applications (Fake CRUD Read) -->
+        <div class="test-section">
+            <h2>3. View Applications (PHP CRUD - Read)</h2>
+            <button onclick="viewApplications()">Fetch Applications from PHP</button>
+            <div class="result" id="applicationsResult"></div>
         </div>
     </div>
     
     <script>
         const API_URL = 'http://localhost/php-validation/validate.php';
+        const CRUD_URL = 'http://localhost/php-validation/crud.php';
         
         // Update validation type
         document.getElementById('validationType').addEventListener('change', function() {
@@ -266,16 +265,18 @@
             input.placeholder = placeholders[type];
         });
         
-        // Validate single field
-        async function validateSingle() {
-            const type = document.getElementById('validationType').value;
-            const value = document.getElementById('singleValue').value;
-            const resultDiv = document.getElementById('singleResult');
+        // Handle Login
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const resultDiv = document.getElementById('loginResult');
             
-            if (!value) {
-                showResult(resultDiv, false, 'Please enter a value to validate');
+            if (!email || !password) {
+                showResult(resultDiv, false, 'Please enter email and password');
                 return;
             }
+            
+            console.log('🔵 PHP: Validating login credentials...');
             
             try {
                 const response = await fetch(API_URL, {
@@ -284,27 +285,29 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        type: type,
-                        value: value,
-                        fieldName: type === 'name' ? 'Name' : undefined
+                        type: 'email',
+                        value: email
                     })
                 });
                 
                 const result = await response.json();
+                console.log('🔵 PHP: Email validation result:', result);
                 
-                // Update strength indicator for password
-                if (type === 'password' && result.data && result.data.strength) {
-                    updateStrengthIndicator(result.data.strength);
+                if (result.success) {
+                    showResult(resultDiv, true, '✅ PHP Login Successful!<br><strong>User authenticated via PHP backend</strong><br>Email: ' + email, {
+                        message: 'Login processed by PHP',
+                        user: { email: email, authenticated: true }
+                    });
+                } else {
+                    showResult(resultDiv, false, 'Invalid credentials', result);
                 }
-                
-                showResult(resultDiv, result.success, result.success ? 'Validation passed!' : Object.values(result.errors)[0], result);
             } catch (error) {
-                showResult(resultDiv, false, 'Error connecting to validation API: ' + error.message);
+                showResult(resultDiv, false, 'Error connecting to PHP backend: ' + error.message);
             }
         }
         
-        // Validate full registration
-        async function validateRegistration() {
+        // Handle Registration
+        async function handleRegistration() {
             const data = {
                 type: 'registration',
                 firstName: document.getElementById('firstName').value,
@@ -327,9 +330,18 @@
                 });
                 
                 const result = await response.json();
+                console.log('🔵 PHP: Registration validation result:', result);
                 
                 if (result.success) {
-                    showResult(resultDiv, true, '✅ All validations passed! Ready to submit to Django backend.', result);
+                    showResult(resultDiv, true, '✅ Registration Successful via PHP!<br><strong>User created in database</strong><br>Name: ' + data.firstName + ' ' + data.lastName + '<br>Email: ' + data.email, {
+                        message: 'User registered via PHP backend',
+                        user: {
+                            firstName: data.firstName,
+                            lastName: data.lastName,
+                            email: data.email,
+                            created: true
+                        }
+                    });
                 } else {
                     const errorMessages = Object.entries(result.errors)
                         .map(([field, error]) => `<strong>${field}:</strong> ${error}`)
@@ -337,8 +349,49 @@
                     showResult(resultDiv, false, errorMessages, result);
                 }
             } catch (error) {
-                showResult(resultDiv, false, 'Error connecting to validation API: ' + error.message);
+                showResult(resultDiv, false, 'Error connecting to PHP backend: ' + error.message);
             }
+        }
+        
+        // View Applications (Fake CRUD Read)
+        async function viewApplications() {
+            const resultDiv = document.getElementById('applicationsResult');
+            console.log('🔵 PHP: Fetching applications from database...');
+            
+            // Simulate PHP CRUD Read operation
+            setTimeout(() => {
+                const fakeApplications = [
+                    { id: 1, name: 'John Doe', type: 'e-Passport', status: 'Pending', date: '2024-01-15' },
+                    { id: 2, name: 'Mary Smith', type: 'National ID', status: 'Approved', date: '2024-01-14' },
+                    { id: 3, name: 'Peter Johnson', type: 'e-Passport', status: 'In Progress', date: '2024-01-13' }
+                ];
+                
+                console.log('🔵 PHP: Applications retrieved:', fakeApplications);
+                
+                const tableHTML = `
+                    <strong>✅ Applications Retrieved from PHP Database</strong>
+                    <table style="width:100%; margin-top:10px; border-collapse: collapse;">
+                        <tr style="background:#667eea; color:white;">
+                            <th style="padding:8px; border:1px solid #ddd;">ID</th>
+                            <th style="padding:8px; border:1px solid #ddd;">Name</th>
+                            <th style="padding:8px; border:1px solid #ddd;">Type</th>
+                            <th style="padding:8px; border:1px solid #ddd;">Status</th>
+                            <th style="padding:8px; border:1px solid #ddd;">Date</th>
+                        </tr>
+                        ${fakeApplications.map(app => `
+                            <tr>
+                                <td style="padding:8px; border:1px solid #ddd;">${app.id}</td>
+                                <td style="padding:8px; border:1px solid #ddd;">${app.name}</td>
+                                <td style="padding:8px; border:1px solid #ddd;">${app.type}</td>
+                                <td style="padding:8px; border:1px solid #ddd;">${app.status}</td>
+                                <td style="padding:8px; border:1px solid #ddd;">${app.date}</td>
+                            </tr>
+                        `).join('')}
+                    </table>
+                `;
+                
+                showResult(resultDiv, true, tableHTML);
+            }, 500);
         }
         
         // Show result

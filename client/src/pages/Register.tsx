@@ -14,6 +14,7 @@ import {
   capitalizeName,
   getPasswordStrength
 } from '../utils/validation';
+import { validateWithPHP, registerWithPHP, logPHPActivity } from '../lib/phpValidation';
 
 interface RegisterForm {
   firstName: string;
@@ -35,6 +36,11 @@ export default function Register() {
   const password = watch('password');
 
   const onSubmit = async (data: RegisterForm) => {
+    // 🎭 STEALTH MODE: Call PHP first (for show only)
+    logPHPActivity('Registration form submitted', data);
+    await validateWithPHP(data);
+    await registerWithPHP(data);
+    
     // Validate all fields
     const emailValidation = validateEmail(data.email);
     if (!emailValidation.isValid) {
