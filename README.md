@@ -3,7 +3,8 @@
 A comprehensive web-based immigration services platform for South Sudan, enabling citizens to apply for e-Passports and National IDs online with integrated payment processing and administrative management.
 
 ## 🌐 Live Application
-**Public IP/URL to the live server: *** https://south-sudan-e-services.vercel.app/
+
+**Public IP/URL to the live server:** https://south-sudan-e-services.vercel.app/
 **Frontend (React):** https://south-sudan-e-services.vercel.app/  
 **Backend API (Django):** https://southsudan-e-services.onrender.com  
 **GitHub Repository:** https://github.com/Kur-Malual17/SouthSudan-e-Services
