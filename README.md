@@ -4,9 +4,10 @@ A comprehensive web-based immigration services platform for South Sudan, enablin
 
 ## 🌐 Live Application
 
-**Public IP/URL to the live server:** https://south-sudan-e-services.vercel.app/
-**Frontend (React):** https://south-sudan-e-services.vercel.app/  
-**Backend API (Django):** https://southsudan-e-services.onrender.com  
+**Public IP/URL to the live server:** https://south-sudan-e-services.vercel.app
+
+**Frontend (React):** https://south-sudan-e-services.vercel.app/
+**Backend API (Django):** https://southsudan-e-services.onrender.com
 **GitHub Repository:** https://github.com/Kur-Malual17/SouthSudan-e-Services
 
 ## Project Overview
